@@ -1,0 +1,93 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Brand {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  logo        String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  cars        Car[]
+}
+
+model Car {
+  id            String      @id @default(cuid())
+  brandId       String
+  brand         Brand       @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  model         String
+  year          Int
+  price         Float
+  mileage       Int
+  fuelType      String
+  transmission  String
+  engine        String
+  horsepower    Int
+  bodyType      String
+  condition     String
+  exteriorColor String
+  interiorColor String
+  driveType     String
+  description   String
+  features      String
+  featured      Boolean     @default(false)
+  status        String      @default("Available")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  images        CarImage[]
+  inquiries     Inquiry[]
+}
+
+model CarImage {
+  id        String   @id @default(cuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id              String   @id @default(cuid())
+  name            String
+  phone           String
+  email           String
+  carId           String?
+  car             Car?     @relation(fields: [carId], references: [id], onDelete: SetNull)
+  subject         String
+  message         String
+  status          String   @default("New")
+  inquiryType     String   @default("General")
+  tradeInDetails  String?
+  createdAt       DateTime @default(now())
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Settings {
+  id           String   @id @default("default-settings")
+  showroomName String   @default("Dream Cars")
+  logo         String   @default("/logo.png")
+  phone        String   @default("03099491835")
+  whatsapp     String   @default("923099491835")
+  email        String   @default("info@dreamcars.com")
+  address      String   @default("Dream Cars Luxury Showroom, Main Boulevard, Gulberg, Lahore, Pakistan")
+  openingHours String   @default("Mon - Sat: 10:00 AM - 9:00 PM | Sun: Appointment Only")
+  socialLinks  String   @default("{\"facebook\":\"https://facebook.com\",\"instagram\":\"https://instagram.com\",\"twitter\":\"https://twitter.com\",\"youtube\":\"https://youtube.com\"}")
+  aboutText    String   @default("Dream Cars is your premier destination for exceptional luxury, exotic, and high-performance motorcars. We curate a handpicked fleet of pristine automobiles backed by rigorous quality inspections and personalized white-glove concierge service.")
+  updatedAt    DateTime @updatedAt
+}
