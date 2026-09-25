@@ -21,6 +21,9 @@ import BlogCard from '@/components/BlogCard';
 import { SHOWROOM_PHONE, getWhatsAppLink } from '@/lib/utils';
 import prisma from '@/lib/prisma';
 
+// Inventory and journal change often — always render with fresh data
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const latestPosts = await prisma.blogPost.findMany({
     where: { status: 'Published' },

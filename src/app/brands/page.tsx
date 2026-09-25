@@ -4,6 +4,9 @@ import type { Metadata } from 'next';
 import prisma from '@/lib/prisma';
 import { ArrowRight, Sparkles, Car } from 'lucide-react';
 
+// Brand list changes with inventory — always render fresh
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Luxury Automotive Brands & Marques | Dream Cars Showroom',
   description: 'Explore the world’s most prestigious automotive marques at Dream Cars. From Porsche and Mercedes-AMG to BMW M, Audi RS, and Range Rover.',
