@@ -82,7 +82,7 @@ export interface Car {
   createdAt?: string | Date;
   updatedAt?: string | Date;
   images: CarImage[];
-  videos: CarVideo[];
+  videos?: CarVideo[];
 }
 
 export interface Inquiry {

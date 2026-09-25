@@ -42,7 +42,7 @@ async function main() {
   for (const c of categoriesData) {
     const cat = await prisma.blogCategory.upsert({
       where: { slug: c.slug },
-      update: { name: c.name, description: c.description },
+      update: {},
       create: c,
     });
     categoryMap[c.slug] = cat.id;

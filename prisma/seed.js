@@ -12,20 +12,14 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('--- Seeding Dream Cars (Vehari, Pakistan) Database ---');
 
-  // 0. Clean previous inventory for a fresh Pakistani showroom
-  await prisma.inquiry.deleteMany();
-  await prisma.carImage.deleteMany();
-  await prisma.car.deleteMany();
-  await prisma.brand.deleteMany();
+  // NOTE: This seed is IDEMPOTENT — safe to run on every deploy.
+  // It never deletes existing data, so owner-uploaded inventory changes survive.
 
   // 1. Showroom Settings — Vehari, Punjab, Pakistan
+  // update: {} keeps any changes the owner made through the admin panel
   await prisma.settings.upsert({
     where: { id: 'default-settings' },
-    update: {
-      address: 'Dream Cars Showroom, Vehari, Punjab, Pakistan',
-      aboutText:
-        'Dream Cars is Vehari’s trusted destination for quality vehicles. From brand new locally assembled favourites and fresh Japanese imports to certified pre-owned luxury SUVs, every vehicle on our floor is verified, inspected on 150 points, and priced transparently in PKR.'
-    },
+    update: {},
     create: {
       id: 'default-settings',
       showroomName: 'Dream Cars',
@@ -80,8 +74,10 @@ async function main() {
 
   const brandMap = {};
   for (const b of brandsData) {
-    const brand = await prisma.brand.create({
-      data: { name: b.name, slug: b.slug, logo: '/logo.png', description: b.description }
+    const brand = await prisma.brand.upsert({
+      where: { slug: b.slug },
+      update: {},
+      create: { name: b.name, slug: b.slug, logo: '/logo.png', description: b.description }
     });
     brandMap[b.slug] = brand.id;
   }
@@ -1014,51 +1010,64 @@ async function main() {
   ];
 
   let carCount = 0;
-  for (const c of carsData) {
-    const brandId = brandMap[c.brandSlug];
-    if (!brandId) continue;
 
-    const createdCar = await prisma.car.create({
-      data: {
-        brandId,
-        model: c.model,
-        year: c.year,
-        price: c.price,
-        mileage: c.mileage,
-        fuelType: c.fuelType,
-        transmission: c.transmission,
-        engine: c.engine,
-        horsepower: c.horsepower,
-        bodyType: c.bodyType,
-        condition: c.condition,
-        exteriorColor: c.exteriorColor,
-        interiorColor: c.interiorColor,
-        driveType: c.driveType,
-        description: c.description,
-        features: c.features,
-        featured: c.featured,
-        status: c.status
-      }
-    });
-    carCount++;
+  // Baseline inventory is only seeded on an EMPTY database (first deploy).
+  // If the owner already manages vehicles, their data is left untouched.
+  const existingCarCount = await prisma.car.count();
+  if (existingCarCount > 0) {
+    console.log(`--- ${existingCarCount} vehicles already in database — skipping baseline inventory ---`);
+  } else {
+    for (const c of carsData) {
+      const brandId = brandMap[c.brandSlug];
+      if (!brandId) continue;
 
-    // Insert images when provided (owner uploads the rest via admin panel)
-    if (c.images && c.images.length > 0) {
-      for (let i = 0; i < c.images.length; i++) {
-        await prisma.carImage.create({
-          data: {
-            carId: createdCar.id,
-            imageUrl: c.images[i],
-            isPrimary: i === 0,
-            sortOrder: i
-          }
-        });
+      const createdCar = await prisma.car.create({
+        data: {
+          brandId,
+          model: c.model,
+          year: c.year,
+          price: c.price,
+          mileage: c.mileage,
+          fuelType: c.fuelType,
+          transmission: c.transmission,
+          engine: c.engine,
+          horsepower: c.horsepower,
+          bodyType: c.bodyType,
+          condition: c.condition,
+          exteriorColor: c.exteriorColor,
+          interiorColor: c.interiorColor,
+          driveType: c.driveType,
+          description: c.description,
+          features: c.features,
+          featured: c.featured,
+          status: c.status
+        }
+      });
+      carCount++;
+
+      // Insert images when provided (owner uploads the rest via admin panel)
+      if (c.images && c.images.length > 0) {
+        for (let i = 0; i < c.images.length; i++) {
+          await prisma.carImage.create({
+            data: {
+              carId: createdCar.id,
+              imageUrl: c.images[i],
+              isPrimary: i === 0,
+              sortOrder: i
+            }
+          });
+        }
       }
     }
+    console.log(`--- ${carCount} vehicles seeded ---`);
   }
-  console.log(`--- ${carCount} vehicles seeded ---`);
 
-  // 5. Sample Pakistani inquiries
+  // 5. Sample Pakistani inquiries — only seeded when the table is empty
+  const inquiryCount = await prisma.inquiry.count();
+  if (inquiryCount > 0) {
+    console.log(`--- ${inquiryCount} inquiries already exist — skipping sample inquiries ---`);
+    return;
+  }
   const corolla = await prisma.car.findFirst({ where: { model: { contains: 'Corolla' } } });
   const civic = await prisma.car.findFirst({ where: { model: { contains: 'Civic' } } });
   const inquiries = [
