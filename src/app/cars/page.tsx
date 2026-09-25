@@ -104,28 +104,28 @@ function CarsContent() {
     search || selectedBrand !== 'all' || minPrice || maxPrice || year || fuelType !== 'all' || transmission !== 'all' || bodyType !== 'all' || condition !== 'all';
 
   return (
-    <div className="pt-28 pb-20 bg-[#08090C] min-h-screen">
+    <div className="pt-28 pb-20 bg-[#0B0B0A] min-h-screen text-[#F4F2ED]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
         <div className="mb-10 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-widest text-rose-400 uppercase mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#151514] border border-[#30302D] text-xs font-semibold tracking-widest text-[#C8A96B] uppercase mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             SHOWROOM INVENTORY
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            Explore Our <span className="text-rose-500">Luxury Cars</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#F4F2ED] tracking-tight">
+            Explore Our <span className="text-[#C8A96B]">Luxury Cars</span>
           </h1>
-          <p className="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl">
+          <p className="text-[#A6A39C] text-sm sm:text-base mt-2 max-w-2xl">
             Browse our verified fleet of high-performance grand tourers, executive saloons, bespoke supercars, and commanding luxury SUVs.
           </p>
         </div>
 
         {/* Top Control Bar: Search + Filter Toggle + Sorting */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#111319] p-4 rounded-2xl border border-white/10 shadow-lg">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#151514] p-4 rounded-2xl border border-[#30302D] shadow-lg">
           {/* Search Input */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#A6A39C] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search model, specs, color..."
@@ -134,12 +134,12 @@ function CarsContent() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl pl-10 pr-4 py-2.5 text-xs placeholder:text-[#A6A39C]/50 focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A6A39C] hover:text-[#F4F2ED]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -151,22 +151,22 @@ function CarsContent() {
             {/* Mobile Filter Button */}
             <button
               onClick={() => setMobileFilterOpen(true)}
-              className="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold"
+              className="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1D1C19] hover:bg-[#242320] text-[#F4F2ED] border border-[#30302D] text-xs font-semibold"
             >
-              <Filter className="w-4 h-4" />
+              <Filter className="w-4 h-4 text-[#C8A96B]" />
               <span>Filters {hasActiveFilters && '•'}</span>
             </button>
 
             {/* Sorting */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 hidden sm:inline">Sort:</span>
+              <span className="text-xs text-[#A6A39C] hidden sm:inline">Sort:</span>
               <select
                 value={sort}
                 onChange={(e) => {
                   setSort(e.target.value);
                   setPage(1);
                 }}
-                className="bg-[#171A24] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="newest">Newest Listed</option>
                 <option value="oldest">Oldest Listed</option>
@@ -183,11 +183,11 @@ function CarsContent() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* Desktop Filter Sidebar */}
-          <aside className="hidden lg:block lg:col-span-1 space-y-6 bg-[#111319] p-6 rounded-3xl border border-white/10 h-fit sticky top-28">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <aside className="hidden lg:block lg:col-span-1 space-y-6 bg-[#151514] p-6 rounded-3xl border border-[#30302D] h-fit sticky top-28">
+            <div className="flex items-center justify-between pb-4 border-b border-[#30302D]">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-rose-500" />
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                <SlidersHorizontal className="w-4 h-4 text-[#C8A96B]" />
+                <h3 className="text-sm font-bold text-[#F4F2ED] uppercase tracking-wider">
                   Filters
                 </h3>
               </div>
@@ -195,7 +195,7 @@ function CarsContent() {
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="flex items-center gap-1 text-[11px] text-rose-400 hover:text-rose-300 font-semibold uppercase tracking-wider"
+                  className="flex items-center gap-1 text-[11px] text-[#C8A96B] hover:text-[#D8C08A] font-semibold uppercase tracking-wider"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>Reset</span>
@@ -205,7 +205,7 @@ function CarsContent() {
 
             {/* Brand Filter */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Marque / Brand
               </label>
               <select
@@ -214,7 +214,7 @@ function CarsContent() {
                   setSelectedBrand(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="all">All Brands</option>
                 {brands.map((b) => (
@@ -227,7 +227,7 @@ function CarsContent() {
 
             {/* Body Type */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Body Type
               </label>
               <select
@@ -236,12 +236,15 @@ function CarsContent() {
                   setBodyType(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="all">All Body Types</option>
                 <option value="Sedan">Sedan</option>
-                <option value="Coupe">Coupe</option>
+                <option value="Hatchback">Hatchback</option>
                 <option value="SUV">SUV</option>
+                <option value="Crossover">Crossover</option>
+                <option value="Pickup">Pickup</option>
+                <option value="Coupe">Coupe</option>
                 <option value="Sports">Sports Car</option>
                 <option value="Convertible">Convertible</option>
               </select>
@@ -249,8 +252,8 @@ function CarsContent() {
 
             {/* Price Range */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Price Range (USD)
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
+                Price Range (PKR)
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <input
@@ -261,7 +264,7 @@ function CarsContent() {
                     setMinPrice(e.target.value);
                     setPage(1);
                   }}
-                  className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500 placeholder:text-slate-600"
+                  className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B] placeholder:text-[#A6A39C]/40"
                 />
                 <input
                   type="number"
@@ -271,14 +274,14 @@ function CarsContent() {
                     setMaxPrice(e.target.value);
                     setPage(1);
                   }}
-                  className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500 placeholder:text-slate-600"
+                  className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B] placeholder:text-[#A6A39C]/40"
                 />
               </div>
             </div>
 
             {/* Year */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Model Year
               </label>
               <select
@@ -287,7 +290,7 @@ function CarsContent() {
                   setYear(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="">Any Year</option>
                 <option value="2025">2025</option>
@@ -300,7 +303,7 @@ function CarsContent() {
 
             {/* Fuel Type */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Fuel Type
               </label>
               <select
@@ -309,7 +312,7 @@ function CarsContent() {
                   setFuelType(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="all">All Fuels</option>
                 <option value="Petrol">Petrol</option>
@@ -321,7 +324,7 @@ function CarsContent() {
 
             {/* Transmission */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Transmission
               </label>
               <select
@@ -330,18 +333,20 @@ function CarsContent() {
                   setTransmission(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="all">All Transmissions</option>
                 <option value="Automatic">Automatic</option>
+                <option value="CVT">CVT</option>
                 <option value="Manual">Manual</option>
-                <option value="Dual-Clutch">Dual-Clutch / PDK</option>
+                <option value="Dual-Clutch">Dual-Clutch (DCT)</option>
+                <option value="AGS">AGS (Auto Gear Shift)</option>
               </select>
             </div>
 
             {/* Condition */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block">
                 Condition
               </label>
               <select
@@ -350,12 +355,13 @@ function CarsContent() {
                   setCondition(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="all">All Conditions</option>
-                <option value="Brand New">Brand New</option>
-                <option value="Certified Luxury">Certified Luxury</option>
-                <option value="Pre-Owned Collector">Pre-Owned Collector</option>
+                <option value="Brand New">Brand New (0 Meter)</option>
+                <option value="Certified Pre-Owned">Certified Pre-Owned</option>
+                <option value="Used">Used</option>
+                <option value="Japanese Imported">Japanese Imported</option>
               </select>
             </div>
 
@@ -364,12 +370,12 @@ function CarsContent() {
           {/* Cars Content Column */}
           <div className="lg:col-span-3 space-y-8">
             {/* Results Count & Active Tags */}
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Showing <strong className="text-white">{cars.length}</strong> of <strong className="text-white">{total}</strong> luxury cars</span>
+            <div className="flex items-center justify-between text-xs text-[#A6A39C]">
+              <span>Showing <strong className="text-[#F4F2ED]">{cars.length}</strong> of <strong className="text-[#F4F2ED]">{total}</strong> vehicles</span>
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="text-rose-400 hover:underline"
+                  className="text-[#C8A96B] hover:underline"
                 >
                   Clear all active filters
                 </button>
@@ -380,18 +386,18 @@ function CarsContent() {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-96 rounded-2xl bg-[#111319] animate-pulse border border-white/5" />
+                  <div key={i} className="h-96 rounded-2xl bg-[#1D1C19] animate-pulse border border-[#30302D]" />
                 ))}
               </div>
             ) : cars.length === 0 ? (
-              <div className="bg-[#111319] rounded-3xl p-12 text-center border border-white/10 space-y-4">
-                <p className="text-lg font-bold text-white">No vehicles found matching your criteria</p>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              <div className="bg-[#1D1C19] rounded-3xl p-12 text-center border border-[#30302D] space-y-4">
+                <p className="text-lg font-bold text-[#F4F2ED]">No vehicles found matching your criteria</p>
+                <p className="text-xs text-[#A6A39C] max-w-sm mx-auto">
                   Try adjusting your filters or price range, or contact our showroom concierge for custom sourcing.
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="px-6 py-2.5 rounded-full bg-rose-600 text-white text-xs font-bold uppercase tracking-wider hover:bg-rose-500 transition-colors"
+                  className="px-6 py-2.5 rounded-full bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] text-xs font-bold uppercase tracking-wider transition-colors"
                 >
                   Reset All Filters
                 </button>
@@ -406,11 +412,11 @@ function CarsContent() {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-3 pt-8 border-t border-white/10">
+              <div className="flex items-center justify-center gap-3 pt-8 border-t border-[#30302D]">
                 <button
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="p-2.5 rounded-xl bg-[#111319] hover:bg-[#1A1D27] disabled:opacity-30 disabled:pointer-events-none text-white border border-white/10 transition-colors"
+                  className="p-2.5 rounded-xl bg-[#1D1C19] hover:bg-[#242320] disabled:opacity-30 disabled:pointer-events-none text-[#F4F2ED] border border-[#30302D] transition-colors"
                   aria-label="Previous Page"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -423,8 +429,8 @@ function CarsContent() {
                       onClick={() => setPage(p)}
                       className={`w-9 h-9 rounded-xl text-xs font-bold transition-all ${
                         p === page
-                          ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/50'
-                          : 'bg-[#111319] text-slate-400 hover:text-white hover:bg-[#1A1D27] border border-white/10'
+                          ? 'bg-[#C8A96B] text-[#0B0B0A] shadow-md shadow-[#C8A96B]/20'
+                          : 'bg-[#1D1C19] text-[#A6A39C] hover:text-[#F4F2ED] hover:bg-[#242320] border border-[#30302D]'
                       }`}
                     >
                       {p}
@@ -435,7 +441,7 @@ function CarsContent() {
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="p-2.5 rounded-xl bg-[#111319] hover:bg-[#1A1D27] disabled:opacity-30 disabled:pointer-events-none text-white border border-white/10 transition-colors"
+                  className="p-2.5 rounded-xl bg-[#1D1C19] hover:bg-[#242320] disabled:opacity-30 disabled:pointer-events-none text-[#F4F2ED] border border-[#30302D] transition-colors"
                   aria-label="Next Page"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -452,14 +458,14 @@ function CarsContent() {
       {/* Mobile Filters Modal */}
       {mobileFilterOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-end">
-          <div className="w-full max-w-sm bg-[#111319] h-full p-6 overflow-y-auto space-y-6 border-l border-white/10 animate-fadeIn">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <h3 className="text-base font-bold text-white uppercase tracking-wider">
+          <div className="w-full max-w-sm bg-[#0B0B0A] h-full p-6 overflow-y-auto space-y-6 border-l border-[#30302D] animate-fadeIn">
+            <div className="flex items-center justify-between pb-4 border-b border-[#30302D]">
+              <h3 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider">
                 Filter Vehicles
               </h3>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="p-2 text-slate-400 hover:text-white"
+                className="p-2 text-[#A6A39C] hover:text-[#F4F2ED]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -467,13 +473,13 @@ function CarsContent() {
 
             {/* Brand */}
             <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-xs font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Brand
               </label>
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs"
               >
                 <option value="all">All Brands</option>
                 {brands.map((b) => (
@@ -484,41 +490,44 @@ function CarsContent() {
 
             {/* Body Type */}
             <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-xs font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Body Type
               </label>
               <select
                 value={bodyType}
                 onChange={(e) => setBodyType(e.target.value)}
-                className="w-full bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs"
+                className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs"
               >
                 <option value="all">All</option>
                 <option value="Sedan">Sedan</option>
-                <option value="Coupe">Coupe</option>
+                <option value="Hatchback">Hatchback</option>
                 <option value="SUV">SUV</option>
+                <option value="Crossover">Crossover</option>
+                <option value="Pickup">Pickup</option>
+                <option value="Coupe">Coupe</option>
                 <option value="Sports">Sports</option>
               </select>
             </div>
 
             {/* Price Range */}
             <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-xs font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Price Range
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="number"
-                  placeholder="Min $"
+                  placeholder="Min PKR"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs"
+                  className="bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs"
                 />
                 <input
                   type="number"
-                  placeholder="Max $"
+                  placeholder="Max PKR"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="bg-[#171A24] text-white border border-white/10 rounded-xl px-3 py-2 text-xs"
+                  className="bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
             </div>
@@ -526,13 +535,13 @@ function CarsContent() {
             <div className="pt-4 flex gap-3">
               <button
                 onClick={handleResetFilters}
-                className="w-1/2 py-3 rounded-xl bg-white/10 text-white text-xs font-bold uppercase"
+                className="w-1/2 py-3 rounded-xl bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] text-xs font-bold uppercase"
               >
                 Reset
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="w-1/2 py-3 rounded-xl bg-rose-600 text-white text-xs font-bold uppercase"
+                className="w-1/2 py-3 rounded-xl bg-[#C8A96B] text-[#0B0B0A] text-xs font-bold uppercase"
               >
                 Apply
               </button>
@@ -546,7 +555,7 @@ function CarsContent() {
 
 export default function CarsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#08090C] pt-32 text-center text-slate-400">Loading showroom inventory...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0B0B0A] pt-32 text-center text-[#A6A39C]">Loading showroom inventory...</div>}>
       <CarsContent />
     </Suspense>
   );

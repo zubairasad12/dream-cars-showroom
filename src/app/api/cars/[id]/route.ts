@@ -15,6 +15,9 @@ export async function GET(
         images: {
           orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }],
         },
+        videos: {
+          orderBy: [{ sortOrder: 'asc' }],
+        },
       },
     });
 
@@ -61,6 +64,7 @@ export async function PUT(
       featured,
       status,
       images,
+      videos,
     } = body;
 
     const car = await prisma.car.update({
@@ -109,12 +113,36 @@ export async function PUT(
       );
     }
 
+    // If videos array is provided, replace car videos
+    if (Array.isArray(videos)) {
+      await prisma.carVideo.deleteMany({
+        where: { carId: id },
+      });
+
+      await Promise.all(
+        videos
+          .filter((vid: any) => (typeof vid === 'string' ? vid : vid.videoUrl))
+          .map((vid: any, index: number) =>
+            prisma.carVideo.create({
+              data: {
+                carId: id,
+                videoUrl: typeof vid === 'string' ? vid : vid.videoUrl,
+                sortOrder: typeof vid === 'object' && vid.sortOrder !== undefined ? vid.sortOrder : index,
+              },
+            })
+          )
+      );
+    }
+
     const updatedCar = await prisma.car.findUnique({
       where: { id },
       include: {
         brand: true,
         images: {
           orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }],
+        },
+        videos: {
+          orderBy: [{ sortOrder: 'asc' }],
         },
       },
     });

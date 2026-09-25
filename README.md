@@ -20,7 +20,7 @@ A complete, production-ready, dark-themed luxury automotive showroom website and
 - **Luxury Brands (`/brands` & `/brands/[slug]`)**: Database-backed marque directory (Porsche, BMW M, Mercedes-AMG, Audi RS, Range Rover, Land Cruiser, Honda Type R, Tesla, etc.).
 - **Vehicle Trade-In (`/trade-in`)**: 3-step appraisal process and interactive trade-in evaluation form saving directly to the database.
 - **About Dream Cars (`/about`)**: Brand heritage, 150-point inspection criteria, climate-controlled pavilion, and satisfaction metrics.
-- **Showroom Concierge (`/contact`)**: Showroom location on Main Boulevard Gulberg, Lahore, direct hotline, opening hours, interactive contact form, and Google Maps embed.
+- **Showroom Concierge (`/contact`)**: Showroom location on Khanewal Road, Front of Stadium Gate, Multan, direct hotline, opening hours, interactive contact form, and Google Maps embed.
 
 ---
 

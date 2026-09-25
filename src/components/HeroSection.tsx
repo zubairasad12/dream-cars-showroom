@@ -5,29 +5,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { 
   ArrowRight, 
-  PhoneCall, 
   MessageCircle, 
   ShieldCheck, 
   Gauge, 
-  Flame, 
-  Sparkles,
-  ChevronRight
+  MapPin
 } from 'lucide-react';
-import { SHOWROOM_PHONE, getWhatsAppLink } from '@/lib/utils';
+import { getWhatsAppLink } from '@/lib/utils';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-[#08090C]">
-      {/* Background ambient automotive light glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-rose-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#08090C] to-transparent z-10" />
+    <section className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-[#0B0B0A]">
+      {/* Background ambient champagne gold light glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#C8A96B]/8 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#0B0B0A] to-transparent z-10" />
 
-      {/* Subtle grid texture */}
+      {/* Subtle background grid pattern */}
       <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        className="absolute inset-0 opacity-[0.025] pointer-events-none" 
         style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundImage: 'radial-gradient(circle at 1px 1px, #C8A96B 1px, transparent 0)',
           backgroundSize: '40px 40px',
         }} 
       />
@@ -39,46 +35,48 @@ export default function HeroSection() {
           <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
             
             {/* Small Label */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-widest text-slate-300 uppercase backdrop-blur-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-              PREMIUM AUTOMOTIVE COLLECTION
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#151514] border border-[#30302D] text-xs font-semibold tracking-widest text-[#C8A96B] uppercase">
+              <MapPin className="w-3.5 h-3.5 text-[#C8A96B]" />
+              VEHARI, PUNJAB, PAKISTAN
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#F4F2ED] leading-[1.15]">
               Find the Car <br />
-              <span className="luxury-gradient-text">You’ve Been</span>{' '}
-              <span className="text-rose-500">Dreaming Of.</span>
+              <span className="text-[#A6A39C]">You’ve Been</span>{' '}
+              <span className="gold-gradient-text">Dreaming Of.</span>
             </h1>
 
             {/* Supporting Text */}
-            <p className="text-base sm:text-lg text-slate-400 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Explore our carefully selected collection of premium vehicles, designed for those who expect more from every drive. Certified pedigrees, unmatched luxury, and white-glove service.
+            <p className="text-base sm:text-lg text-[#A6A39C] font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Welcome to Dream Cars, Vehari&apos;s premier destination for high-end local, Japanese imported, and certified pre-owned vehicles. Transparent pricing in PKR with verified inspections.
             </p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+              {/* Primary Button */}
               <Link
                 href="/cars"
-                className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm tracking-wider uppercase transition-all shadow-xl shadow-rose-950/50 hover:shadow-rose-600/30 group"
+                className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] font-bold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-[#C8A96B]/25 group"
               >
                 <span>EXPLORE CARS</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
 
+              {/* Secondary Button */}
               <Link
                 href="/contact"
-                className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-200 border border-white/15 font-semibold text-sm tracking-wider uppercase transition-colors"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-transparent hover:bg-[#C8A96B] text-[#F4F2ED] hover:text-[#0B0B0A] border border-[#C8A96B] font-semibold text-xs tracking-wider uppercase transition-all"
               >
                 <span>CONTACT SHOWROOM</span>
               </Link>
 
-              {/* Direct WhatsApp Callout */}
+              {/* Direct WhatsApp */}
               <a
-                href={getWhatsAppLink('Hello Dream Cars Showroom, I am looking to purchase a luxury vehicle.')}
+                href={getWhatsAppLink('Hello Dream Cars Vehari, I am looking to purchase a vehicle.')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-3.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold text-xs tracking-wider transition-all"
+                className="flex items-center gap-2 px-5 py-3.5 rounded-full bg-[#151514] hover:bg-[#1D1C19] text-[#C8A96B] border border-[#30302D] hover:border-[#C8A96B]/50 font-semibold text-xs tracking-wider transition-all"
                 title="Direct WhatsApp: 03099491835"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400" />
@@ -87,55 +85,55 @@ export default function HeroSection() {
             </div>
 
             {/* Quick Showroom Highlights */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 text-left">
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#30302D] text-left">
               <div>
-                <p className="text-2xl font-black text-white">100%</p>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-medium mt-0.5">Verified Provenance</p>
+                <p className="text-2xl font-black text-[#F4F2ED]">100%</p>
+                <p className="text-xs text-[#A6A39C] uppercase tracking-wider font-medium mt-0.5">Verified Documents</p>
               </div>
               <div>
-                <p className="text-2xl font-black text-rose-500">150+</p>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-medium mt-0.5">Point Inspection</p>
+                <p className="text-2xl font-black text-[#C8A96B]">150+</p>
+                <p className="text-xs text-[#A6A39C] uppercase tracking-wider font-medium mt-0.5">Point Inspection</p>
               </div>
               <div>
-                <p className="text-2xl font-black text-white">24/7</p>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-medium mt-0.5">Concierge Support</p>
+                <p className="text-2xl font-black text-[#F4F2ED]">PKR</p>
+                <p className="text-xs text-[#A6A39C] uppercase tracking-wider font-medium mt-0.5">Fair Market Price</p>
               </div>
             </div>
 
           </div>
 
-          {/* Right Column: Hero Visual Showcase */}
+          {/* Right Column: Hero Visual Showcase (2025 Peugeot 2008 in Black) */}
           <div className="lg:col-span-6 relative">
             <div className="relative mx-auto max-w-lg lg:max-w-none">
               
-              {/* Image Frame with glowing backdrop */}
-              <div className="relative aspect-[16/11] rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-br from-slate-900 via-[#111319] to-black shadow-2xl shadow-black">
+              {/* Image Frame - fully responsive across mobile, tablet, and desktop */}
+              <div className="relative aspect-[16/10] sm:aspect-[16/11] rounded-3xl overflow-hidden border border-[#30302D] bg-[#1D1C19] shadow-2xl shadow-black/80">
                 <Image
-                  src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=85"
-                  alt="Dream Cars Luxury Automotive Showcase"
+                  src="/cars/peugeot-2008-black-2025.jpg"
+                  alt="2025 Peugeot 2008 Perla Nera Black - Dream Cars Showroom Vehari"
                   fill
                   priority
-                  className="object-cover object-center scale-105 hover:scale-100 transition-transform duration-700"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center scale-100 hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 50vw"
                 />
 
                 {/* Ambient vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#08090C] via-transparent to-transparent opacity-70" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0A] via-transparent to-transparent opacity-80" />
 
                 {/* In-image Car Label */}
-                <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
-                  <div className="bg-black/70 backdrop-blur-md px-4 py-2 rounded-xl border border-white/15">
-                    <span className="text-[10px] text-rose-400 uppercase tracking-widest font-bold block">
-                      FLAGSHIP SHOWCASE
+                <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex items-center justify-between">
+                  <div className="bg-[#1D1C19]/90 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-[#30302D]">
+                    <span className="text-[9px] sm:text-[10px] text-[#C8A96B] uppercase tracking-widest font-bold block">
+                      FEATURED SHOWCASE
                     </span>
-                    <span className="text-sm font-bold text-white">
-                      Mercedes-AMG GT Black Series
+                    <span className="text-xs sm:text-sm font-bold text-[#F4F2ED]">
+                      2025 Peugeot 2008 (Nera Black)
                     </span>
                   </div>
 
                   <Link
                     href="/cars"
-                    className="p-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white transition-colors shadow-lg"
+                    className="p-2.5 rounded-full bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] transition-colors shadow-lg"
                     aria-label="View Car"
                   >
                     <ArrowRight className="w-4 h-4" />
@@ -143,25 +141,25 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Floating Stat Badge 1: Top Speed / 0-60 */}
-              <div className="absolute -top-4 -left-4 sm:-left-6 bg-[#111319]/90 border border-white/15 backdrop-blur-md p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-fadeIn">
-                <div className="w-10 h-10 rounded-xl bg-rose-600/20 text-rose-500 flex items-center justify-center">
-                  <Gauge className="w-5 h-5" />
+              {/* Floating Stat Badge 1 */}
+              <div className="absolute -top-4 -left-3 sm:-left-6 bg-[#1D1C19]/95 border border-[#30302D] backdrop-blur-md p-3 sm:p-3.5 rounded-2xl shadow-xl flex items-center gap-2.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#151514] text-[#C8A96B] border border-[#30302D] flex items-center justify-center shrink-0">
+                  <Gauge className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">0 - 100 KM/H</div>
-                  <div className="text-base font-extrabold text-white">3.1 Seconds</div>
+                  <div className="text-[9px] sm:text-[10px] uppercase font-bold text-[#A6A39C] tracking-wider">1.2L PureTech</div>
+                  <div className="text-sm sm:text-base font-extrabold text-[#F4F2ED]">130 HP Turbo</div>
                 </div>
               </div>
 
-              {/* Floating Stat Badge 2: Certified Warranty */}
-              <div className="absolute -bottom-5 -right-4 sm:-right-6 bg-[#111319]/90 border border-emerald-500/30 backdrop-blur-md p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-fadeIn">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5" />
+              {/* Floating Stat Badge 2 */}
+              <div className="absolute -bottom-5 -right-3 sm:-right-6 bg-[#1D1C19]/95 border border-[#30302D] backdrop-blur-md p-3 sm:p-3.5 rounded-2xl shadow-xl flex items-center gap-2.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#151514] text-[#C8A96B] border border-[#30302D] flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Dream Certified</div>
-                  <div className="text-base font-extrabold text-white">Verified Excellence</div>
+                  <div className="text-[9px] sm:text-[10px] uppercase font-bold text-[#C8A96B] tracking-wider">Dream Certified</div>
+                  <div className="text-sm sm:text-base font-extrabold text-[#F4F2ED]">Vehari Showroom</div>
                 </div>
               </div>
 

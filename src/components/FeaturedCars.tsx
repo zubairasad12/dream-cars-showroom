@@ -34,23 +34,23 @@ export default function FeaturedCars() {
     : cars.filter((c) => c.bodyType.toLowerCase() === filterType.toLowerCase());
 
   return (
-    <section className="py-24 bg-[#08090C] relative">
-      {/* Background glow */}
-      <div className="absolute top-1/2 right-1/4 w-[500px] h-[300px] bg-rose-600/5 rounded-full blur-[160px] pointer-events-none" />
+    <section className="py-24 bg-[#0B0B0A] relative">
+      {/* Background subtle gold glow */}
+      <div className="absolute top-1/2 right-1/4 w-[500px] h-[300px] bg-[#C8A96B]/5 rounded-full blur-[180px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-600/10 text-rose-400 border border-rose-500/20 text-xs font-bold tracking-widest uppercase mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#151514] text-[#C8A96B] border border-[#30302D] text-xs font-bold tracking-widest uppercase mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
               HANDPICKED EXCELLENCE
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-              Featured <span className="text-rose-500">Collection</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#F4F2ED] tracking-tight">
+              Featured <span className="text-[#C8A96B]">Collection</span>
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base max-w-xl mt-2">
+            <p className="text-[#A6A39C] text-sm sm:text-base max-w-xl mt-2">
               Select vehicles chosen for their extraordinary pedigree, performance milestones, and pristine physical presentation.
             </p>
           </div>
@@ -63,8 +63,8 @@ export default function FeaturedCars() {
                 onClick={() => setFilterType(type)}
                 className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
                   filterType.toLowerCase() === type.toLowerCase()
-                    ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/50'
-                    : 'bg-[#12141C] text-slate-400 hover:text-white hover:bg-[#1A1D27] border border-white/5'
+                    ? 'bg-[#C8A96B] text-[#0B0B0A] shadow-md shadow-[#C8A96B]/20'
+                    : 'bg-[#1D1C19] text-[#A6A39C] hover:text-[#F4F2ED] hover:bg-[#242320] border border-[#30302D]'
                 }`}
               >
                 {type}
@@ -77,17 +77,17 @@ export default function FeaturedCars() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-96 rounded-2xl bg-[#111319] animate-pulse border border-white/5" />
+              <div key={i} className="h-96 rounded-2xl bg-[#1D1C19] animate-pulse border border-[#30302D]" />
             ))}
           </div>
         ) : filteredCars.length === 0 ? (
-          <div className="text-center py-16 bg-[#111319] rounded-3xl border border-white/10 p-8">
-            <AlertCircle className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-            <p className="text-base text-white font-medium">No featured cars found for this category</p>
-            <p className="text-xs text-slate-400 mt-1">Explore our complete showroom inventory to see all available models.</p>
+          <div className="text-center py-16 bg-[#1D1C19] rounded-3xl border border-[#30302D] p-8">
+            <AlertCircle className="w-10 h-10 text-[#A6A39C] mx-auto mb-3" />
+            <p className="text-base text-[#F4F2ED] font-medium">No featured cars found for this category</p>
+            <p className="text-xs text-[#A6A39C] mt-1">Explore our complete showroom inventory to see all available models.</p>
             <Link
               href="/cars"
-              className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-rose-600 text-white text-xs font-semibold uppercase tracking-wider hover:bg-rose-500 transition-colors"
+              className="inline-flex items-center gap-2 mt-5 px-6 py-2.5 rounded-full bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] text-xs font-bold uppercase tracking-wider transition-colors"
             >
               <span>Explore All Cars</span>
               <ArrowRight className="w-4 h-4" />
@@ -105,7 +105,7 @@ export default function FeaturedCars() {
         <div className="mt-14 text-center">
           <Link
             href="/cars"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#12151D] hover:bg-rose-600 text-white border border-white/15 hover:border-transparent text-xs font-bold uppercase tracking-widest transition-all shadow-xl hover:shadow-rose-600/30 group"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-transparent hover:bg-[#C8A96B] text-[#F4F2ED] hover:text-[#0B0B0A] border border-[#C8A96B] text-xs font-bold uppercase tracking-widest transition-all group"
           >
             <span>VIEW COMPLETE SHOWROOM INVENTORY</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

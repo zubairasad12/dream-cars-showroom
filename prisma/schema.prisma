@@ -42,7 +42,9 @@ model Car {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   images        CarImage[]
+  videos        CarVideo[]
   inquiries     Inquiry[]
+  blogPosts     BlogPost[]
 }
 
 model CarImage {
@@ -53,6 +55,47 @@ model CarImage {
   isPrimary Boolean  @default(false)
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
+}
+
+model CarVideo {
+  id        String   @id @default(cuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  videoUrl  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model BlogCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  posts       BlogPost[]
+}
+
+model BlogPost {
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  excerpt        String
+  content        String
+  coverImage     String?
+  author         String        @default("Dream Cars Team")
+  tags           String        @default("[]")
+  readingTime    Int           @default(5)
+  featured       Boolean       @default(false)
+  status         String        @default("Draft")
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  publishDate    DateTime      @default(now())
+  categoryId     String?
+  category       BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  relatedCars    Car[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Inquiry {
@@ -85,7 +128,7 @@ model Settings {
   phone        String   @default("03099491835")
   whatsapp     String   @default("923099491835")
   email        String   @default("info@dreamcars.com")
-  address      String   @default("Dream Cars Luxury Showroom, Main Boulevard, Gulberg, Lahore, Pakistan")
+  address      String   @default("Dream Cars Showroom, Khanewal Road, Front of Stadium Gate, Vehari, Punjab, Pakistan")
   openingHours String   @default("Mon - Sat: 10:00 AM - 9:00 PM | Sun: Appointment Only")
   socialLinks  String   @default("{\"facebook\":\"https://facebook.com\",\"instagram\":\"https://instagram.com\",\"twitter\":\"https://twitter.com\",\"youtube\":\"https://youtube.com\"}")
   aboutText    String   @default("Dream Cars is your premier destination for exceptional luxury, exotic, and high-performance motorcars. We curate a handpicked fleet of pristine automobiles backed by rigorous quality inspections and personalized white-glove concierge service.")

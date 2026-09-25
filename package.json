@@ -7,9 +7,11 @@
     "build": "prisma generate && next build",
     "start": "next start -p 3000",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "prisma:seed": "node prisma/seed.js"
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:seed-blog": "node prisma/seed-blog.js"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

@@ -8,7 +8,6 @@ import {
   Search, 
   Edit3, 
   Trash2, 
-  ExternalLink, 
   Sparkles, 
   AlertCircle,
   Eye
@@ -66,19 +65,19 @@ export default function AdminCarsPage() {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#30302D]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
             Vehicle Management
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#A6A39C] mt-1">
             Maintain, edit, upload photos, and update showroom inventory status.
           </p>
         </div>
 
         <Link
           href="/admin/cars/new"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/50 self-start sm:self-auto"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15 self-start sm:self-auto"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Add New Vehicle</span>
@@ -86,24 +85,24 @@ export default function AdminCarsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#111319] p-4 rounded-2xl border border-white/10">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#1D1C19] p-4 rounded-2xl border border-[#30302D]">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by brand, model, color..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#161922] text-white border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+            className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <span className="text-xs text-slate-400 whitespace-nowrap">Status:</span>
+          <span className="text-xs text-[#A6A39C] whitespace-nowrap">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full sm:w-auto bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+            className="w-full sm:w-auto bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
           >
             <option value="all">All Vehicles</option>
             <option value="Available">Available</option>
@@ -114,21 +113,21 @@ export default function AdminCarsPage() {
       </div>
 
       {/* Cars Table */}
-      <div className="bg-[#111319] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl overflow-hidden shadow-2xl">
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-400">
+          <div className="p-12 text-center text-xs text-[#A6A39C]">
             Loading vehicle inventory...
           </div>
         ) : cars.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <AlertCircle className="w-8 h-8 text-slate-500 mx-auto" />
-            <p className="text-sm font-semibold text-white">No vehicles found</p>
-            <p className="text-xs text-slate-400">Try changing your search or add a new vehicle.</p>
+            <AlertCircle className="w-8 h-8 text-stone-500 mx-auto" />
+            <p className="text-sm font-semibold text-[#F4F2ED]">No vehicles found</p>
+            <p className="text-xs text-[#A6A39C]">Try changing your search or add a new vehicle.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#161922] text-slate-400 font-bold uppercase tracking-wider border-b border-white/10">
+              <thead className="bg-[#151514] text-[#A6A39C] font-bold uppercase tracking-wider border-b border-[#30302D]">
                 <tr>
                   <th className="py-3.5 px-4">Vehicle</th>
                   <th className="py-3.5 px-4">Year & Price</th>
@@ -138,7 +137,7 @@ export default function AdminCarsPage() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-[#30302D] text-[#A6A39C]">
                 {cars.map((car) => {
                   const imgUrl = car.images[0]?.imageUrl || '/logo.png';
                   return (
@@ -146,7 +145,7 @@ export default function AdminCarsPage() {
                       {/* Vehicle Image & Model */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-14 h-10 rounded-lg overflow-hidden bg-slate-900 shrink-0 relative border border-white/10">
+                          <div className="w-14 h-10 rounded-lg overflow-hidden bg-slate-900 shrink-0 relative border border-[#30302D]">
                             <Image
                               src={imgUrl}
                               alt={car.model}
@@ -155,10 +154,10 @@ export default function AdminCarsPage() {
                             />
                           </div>
                           <div>
-                            <span className="text-[10px] font-bold text-rose-500 uppercase tracking-widest block">
+                            <span className="text-[10px] font-bold text-[#C8A96B] uppercase tracking-widest block">
                               {car.brand?.name}
                             </span>
-                            <span className="font-bold text-white text-sm">
+                            <span className="font-bold text-[#F4F2ED] text-sm">
                               {car.model}
                             </span>
                           </div>
@@ -167,20 +166,20 @@ export default function AdminCarsPage() {
 
                       {/* Year & Price */}
                       <td className="py-3.5 px-4">
-                        <span className="font-extrabold text-white block">
+                        <span className="font-extrabold text-[#C8A96B] block">
                           {formatPrice(car.price)}
                         </span>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-[#A6A39C]">
                           {car.year} Model
                         </span>
                       </td>
 
                       {/* Specs */}
                       <td className="py-3.5 px-4">
-                        <span className="block text-slate-200 font-medium">
+                        <span className="block text-[#F4F2ED] font-medium">
                           {car.horsepower} HP • {car.bodyType}
                         </span>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-[#A6A39C]">
                           {formatMileage(car.mileage)} • {car.transmission.split(' ')[0]}
                         </span>
                       </td>
@@ -188,12 +187,12 @@ export default function AdminCarsPage() {
                       {/* Featured */}
                       <td className="py-3.5 px-4">
                         {car.featured ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-600/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold uppercase">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#C8A96B]/15 text-[#C8A96B] border border-[#C8A96B]/30 text-[10px] font-bold uppercase">
                             <Sparkles className="w-3 h-3" />
                             Yes
                           </span>
                         ) : (
-                          <span className="text-slate-500 text-[11px]">No</span>
+                          <span className="text-stone-500 text-[11px]">No</span>
                         )}
                       </td>
 
@@ -218,7 +217,7 @@ export default function AdminCarsPage() {
                           <Link
                             href={`/cars/${car.id}`}
                             target="_blank"
-                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg bg-[#151514] hover:bg-[#30302D] text-[#A6A39C] hover:text-[#F4F2ED] transition-colors"
                             title="View on Public Site"
                           >
                             <Eye className="w-4 h-4" />
@@ -226,7 +225,7 @@ export default function AdminCarsPage() {
 
                           <Link
                             href={`/admin/cars/${car.id}/edit`}
-                            className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-600 text-slate-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg bg-[#151514] hover:bg-[#C8A96B] hover:text-[#0B0B0A] text-[#A6A39C] transition-colors"
                             title="Edit Vehicle"
                           >
                             <Edit3 className="w-4 h-4" />

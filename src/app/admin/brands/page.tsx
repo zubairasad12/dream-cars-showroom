@@ -1,18 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { 
   Plus, 
   Trash2, 
   Edit2, 
-  Check, 
   X, 
   AlertCircle, 
-  Tag, 
-  Car,
-  ToggleLeft,
-  ToggleRight
+  Tag
 } from 'lucide-react';
 import { Brand } from '@/lib/types';
 
@@ -125,19 +120,19 @@ export default function AdminBrandsPage() {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#30302D]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
             Brand & Marque Management
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#A6A39C] mt-1">
             Add luxury marques, upload logos, toggle active showroom visibility.
           </p>
         </div>
 
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/50 self-start sm:self-auto"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Brand</span>
@@ -152,13 +147,13 @@ export default function AdminBrandsPage() {
       )}
 
       {/* Brands Table */}
-      <div className="bg-[#111319] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl overflow-hidden shadow-2xl">
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-400">Loading brands...</div>
+          <div className="p-12 text-center text-xs text-[#A6A39C]">Loading brands...</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#161922] text-slate-400 font-bold uppercase tracking-wider border-b border-white/10">
+              <thead className="bg-[#151514] text-[#A6A39C] font-bold uppercase tracking-wider border-b border-[#30302D]">
                 <tr>
                   <th className="py-3.5 px-4">Brand</th>
                   <th className="py-3.5 px-4">Slug</th>
@@ -168,28 +163,28 @@ export default function AdminBrandsPage() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-[#30302D] text-[#A6A39C]">
                 {brands.map((b) => (
                   <tr key={b.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="py-3.5 px-4 font-bold text-white text-sm">
+                    <td className="py-3.5 px-4 font-bold text-[#F4F2ED] text-sm">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-[#161922] border border-white/10 flex items-center justify-center p-1.5">
-                          <Tag className="w-4 h-4 text-rose-500" />
+                        <div className="w-8 h-8 rounded-lg bg-[#151514] border border-[#30302D] flex items-center justify-center p-1.5">
+                          <Tag className="w-4 h-4 text-[#C8A96B]" />
                         </div>
                         <span>{b.name}</span>
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-slate-400">
+                    <td className="py-3.5 px-4 font-mono text-[#A6A39C]">
                       {b.slug}
                     </td>
 
-                    <td className="py-3.5 px-4 max-w-xs truncate text-slate-400">
+                    <td className="py-3.5 px-4 max-w-xs truncate text-[#A6A39C]">
                       {b.description || 'No description'}
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="px-2.5 py-1 rounded-full bg-white/5 text-slate-300 font-semibold text-[11px]">
+                      <span className="px-2.5 py-1 rounded-full bg-[#151514] text-[#F4F2ED] font-semibold text-[11px] border border-[#30302D]">
                         {b._count?.cars || 0} Cars
                       </span>
                     </td>
@@ -200,7 +195,7 @@ export default function AdminBrandsPage() {
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors ${
                           b.active
                             ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-white/5 text-slate-500 border border-white/10'
+                            : 'bg-[#151514] text-stone-500 border border-[#30302D]'
                         }`}
                       >
                         {b.active ? 'Active' : 'Disabled'}
@@ -211,7 +206,7 @@ export default function AdminBrandsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(b)}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-600 text-slate-300 hover:text-white transition-colors"
+                          className="p-1.5 rounded-lg bg-[#151514] hover:bg-[#C8A96B] hover:text-[#0B0B0A] text-[#A6A39C] transition-colors"
                           title="Edit Brand"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -236,14 +231,14 @@ export default function AdminBrandsPage() {
       {/* ADD / EDIT MODAL */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 animate-fadeIn">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider">
+          <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 animate-fadeIn">
+            <div className="flex items-center justify-between pb-4 border-b border-[#30302D]">
+              <h3 className="text-lg font-bold text-[#F4F2ED] uppercase tracking-wider">
                 {editingBrand ? `Edit Brand: ${editingBrand.name}` : 'Add New Marque'}
               </h3>
               <button
                 onClick={() => setModalOpen(false)}
-                className="p-1 text-slate-400 hover:text-white"
+                className="p-1 text-[#A6A39C] hover:text-[#F4F2ED]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -251,7 +246,7 @@ export default function AdminBrandsPage() {
 
             <form onSubmit={handleSaveBrand} className="space-y-4">
               <div>
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                   Brand Name *
                 </label>
                 <input
@@ -260,12 +255,12 @@ export default function AdminBrandsPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Aston Martin, Ferrari, Bentley"
-                  className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                  className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                   Logo / Photo URL
                 </label>
                 <input
@@ -273,12 +268,12 @@ export default function AdminBrandsPage() {
                   value={logo}
                   onChange={(e) => setLogo(e.target.value)}
                   placeholder="https://..."
-                  className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                  className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                   Description / Heritage
                 </label>
                 <textarea
@@ -286,7 +281,7 @@ export default function AdminBrandsPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Engineering pedigree, racing heritage, flagship characteristics..."
-                  className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                  className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
                 />
               </div>
 
@@ -296,25 +291,25 @@ export default function AdminBrandsPage() {
                   id="brandActiveCheck"
                   checked={active}
                   onChange={(e) => setActive(e.target.checked)}
-                  className="w-4 h-4 rounded text-rose-600 bg-[#161922] border-white/20"
+                  className="w-4 h-4 rounded text-[#C8A96B] bg-[#151514] border-[#30302D] focus:ring-[#C8A96B]"
                 />
-                <label htmlFor="brandActiveCheck" className="text-xs font-semibold text-white cursor-pointer select-none">
+                <label htmlFor="brandActiveCheck" className="text-xs font-semibold text-[#F4F2ED] cursor-pointer select-none">
                   Active Brand (Visible in filters and showcase)
                 </label>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+              <div className="flex justify-end gap-3 pt-4 border-t border-[#30302D]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold uppercase"
+                  className="px-5 py-2.5 rounded-xl bg-[#151514] hover:bg-[#30302D] text-[#A6A39C] text-xs font-bold uppercase transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider"
+                  className="px-6 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-colors"
                 >
                   {saving ? 'Saving...' : 'Save Brand'}
                 </button>

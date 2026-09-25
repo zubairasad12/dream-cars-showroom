@@ -4,24 +4,28 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  UploadCloud, 
-  Trash2, 
-  Star, 
-  ArrowLeft, 
-  Save, 
-  Plus, 
-  X, 
-  AlertCircle, 
-  Check,
+import {
+  UploadCloud,
+  Trash2,
+  Star,
+  ArrowLeft,
+  Save,
+  X,
+  AlertCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Film
 } from 'lucide-react';
 import { Brand } from '@/lib/types';
 
 interface ImageItem {
   imageUrl: string;
   isPrimary: boolean;
+  sortOrder: number;
+}
+
+interface VideoItem {
+  videoUrl: string;
   sortOrder: number;
 }
 
@@ -54,6 +58,8 @@ export default function NewCarPage() {
   });
 
   const [images, setImages] = useState<ImageItem[]>([]);
+  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState('');
 
   // Features list
@@ -167,6 +173,60 @@ export default function NewCarPage() {
     });
   };
 
+  // Video upload handler (MP4, WEBM, MOV up to 100 MB)
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingVideo(true);
+    setError('');
+
+    try {
+      const data = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        data.append('files', files[i]);
+      }
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: data,
+      });
+
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Video upload failed');
+
+      if (json.urls && Array.isArray(json.urls)) {
+        const newVideos: VideoItem[] = json.urls.map((url: string, index: number) => ({
+          videoUrl: url,
+          sortOrder: videos.length + index,
+        }));
+        setVideos((prev) => [...prev, ...newVideos]);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to upload video');
+    } finally {
+      setUploadingVideo(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleDeleteVideo = (index: number) => {
+    setVideos((prev) => prev.filter((_, i) => i !== index).map((v, i) => ({ ...v, sortOrder: i })));
+  };
+
+  const handleMoveVideo = (index: number, direction: 'left' | 'right') => {
+    const targetIndex = direction === 'left' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= videos.length) return;
+
+    setVideos((prev) => {
+      const updated = [...prev];
+      const temp = updated[index];
+      updated[index] = updated[targetIndex];
+      updated[targetIndex] = temp;
+      return updated.map((v, i) => ({ ...v, sortOrder: i }));
+    });
+  };
+
   const handleAddFeature = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newFeature.trim()) return;
@@ -197,6 +257,7 @@ export default function NewCarPage() {
         ...formData,
         features,
         images,
+        videos,
       };
 
       const res = await fetch('/api/cars', {
@@ -221,19 +282,19 @@ export default function NewCarPage() {
     <div className="max-w-6xl mx-auto space-y-8">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-white/10">
+      <div className="flex items-center justify-between pb-6 border-b border-[#30302D]">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/cars"
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl bg-[#1D1C19] hover:bg-[#30302D] text-[#A6A39C] hover:text-[#F4F2ED] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
               Add New Luxury Vehicle
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[#A6A39C]">
               Upload multiple angles, set detailed specs, and publish to the showroom.
             </p>
           </div>
@@ -242,7 +303,7 @@ export default function NewCarPage() {
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15"
         >
           <Save className="w-4 h-4" />
           <span>{submitting ? 'Saving Vehicle...' : 'Publish Vehicle'}</span>
@@ -259,32 +320,31 @@ export default function NewCarPage() {
       <form onSubmit={handleSubmit} className="space-y-10">
         
         {/* SECTION 1: MULTIPLE IMAGE UPLOAD */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/10">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#30302D]">
             <div>
-              <h2 className="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <UploadCloud className="w-5 h-5 text-rose-500" />
+              <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider flex items-center gap-2">
+                <UploadCloud className="w-5 h-5 text-[#C8A96B]" />
                 Vehicle Photography ({images.length} Photos)
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[#A6A39C] mt-0.5">
                 Front, rear, side, interior cockpit, engine, wheels. Drag, select, or input URLs.
               </p>
             </div>
 
-            <span className="text-[11px] font-semibold text-rose-400 uppercase tracking-widest">
+            <span className="text-[11px] font-semibold text-[#C8A96B] uppercase tracking-widest">
               High Resolution Gallery
             </span>
           </div>
 
           {/* Upload Dropzone */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* File Drag/Select */}
-            <label className="border-2 border-dashed border-white/15 hover:border-rose-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-[#161922] flex flex-col items-center justify-center">
-              <UploadCloud className="w-8 h-8 text-slate-400 mb-2" />
-              <span className="text-xs font-bold text-white block">
+            <label className="border-2 border-dashed border-[#30302D] hover:border-[#C8A96B]/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-[#151514] flex flex-col items-center justify-center">
+              <UploadCloud className="w-8 h-8 text-stone-500 mb-2" />
+              <span className="text-xs font-bold text-[#F4F2ED] block">
                 {uploading ? 'Processing & Uploading...' : 'Click or Drag Multiple Photos'}
               </span>
-              <span className="text-[10px] text-slate-400 mt-1">
+              <span className="text-[10px] text-[#A6A39C] mt-1">
                 PNG, JPG, WEBP, AVIF supported
               </span>
               <input
@@ -297,13 +357,12 @@ export default function NewCarPage() {
               />
             </label>
 
-            {/* Direct Image URL input */}
-            <div className="border border-white/10 rounded-2xl p-6 bg-[#161922] flex flex-col justify-center">
-              <span className="text-xs font-bold text-white block mb-1">
+            <div className="border border-[#30302D] rounded-2xl p-6 bg-[#151514] flex flex-col justify-center">
+              <span className="text-xs font-bold text-[#F4F2ED] block mb-1">
                 Add Image from Direct URL
               </span>
-              <p className="text-[10px] text-slate-400 mb-3">
-                Paste high-res Unsplash or external photography URL
+              <p className="text-[10px] text-[#A6A39C] mb-3">
+                Paste high-res photography URL
               </p>
               <div className="flex gap-2">
                 <input
@@ -311,12 +370,12 @@ export default function NewCarPage() {
                   placeholder="https://images.unsplash.com/..."
                   value={customImageUrl}
                   onChange={(e) => setCustomImageUrl(e.target.value)}
-                  className="flex-1 bg-[#111319] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+                  className="flex-1 bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
                 />
                 <button
                   type="button"
                   onClick={handleAddImageUrl}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold"
+                  className="px-4 py-2 bg-[#30302D] hover:bg-[#C8A96B] hover:text-[#0B0B0A] text-[#F4F2ED] rounded-xl text-xs font-semibold transition-colors"
                 >
                   Add URL
                 </button>
@@ -327,7 +386,7 @@ export default function NewCarPage() {
           {/* Images Preview Reel with Reorder and Set Primary */}
           {images.length > 0 && (
             <div className="space-y-3 pt-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#A6A39C]">
                 Uploaded Gallery ({images.length}) • Click star to set Cover Image
               </span>
 
@@ -336,7 +395,7 @@ export default function NewCarPage() {
                   <div
                     key={idx}
                     className={`relative aspect-[4/3] rounded-xl overflow-hidden border-2 group bg-slate-900 ${
-                      img.isPrimary ? 'border-rose-500 shadow-lg shadow-rose-950/50' : 'border-white/10'
+                      img.isPrimary ? 'border-[#C8A96B] shadow-lg shadow-[#C8A96B]/20' : 'border-[#30302D]'
                     }`}
                   >
                     <Image
@@ -348,7 +407,7 @@ export default function NewCarPage() {
 
                     {/* Primary Badge */}
                     {img.isPrimary && (
-                      <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-rose-600 text-white text-[9px] font-bold uppercase tracking-wider shadow">
+                      <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-[#C8A96B] text-[#0B0B0A] text-[9px] font-bold uppercase tracking-wider shadow">
                         Cover Photo
                       </span>
                     )}
@@ -360,7 +419,7 @@ export default function NewCarPage() {
                           type="button"
                           onClick={() => handleSetPrimary(idx)}
                           className={`p-1.5 rounded-lg ${
-                            img.isPrimary ? 'bg-rose-600 text-white' : 'bg-black/50 text-slate-300 hover:text-white'
+                            img.isPrimary ? 'bg-[#C8A96B] text-[#0B0B0A]' : 'bg-black/50 text-[#A6A39C] hover:text-[#F4F2ED]'
                           }`}
                           title="Set as Cover Photo"
                         >
@@ -383,7 +442,7 @@ export default function NewCarPage() {
                           type="button"
                           disabled={idx === 0}
                           onClick={() => handleMoveImage(idx, 'left')}
-                          className="p-1 rounded bg-black/60 text-white hover:bg-rose-600 disabled:opacity-30"
+                          className="p-1 rounded bg-black/60 text-[#F4F2ED] hover:bg-[#C8A96B] hover:text-[#0B0B0A] disabled:opacity-30"
                         >
                           <ChevronLeft className="w-3.5 h-3.5" />
                         </button>
@@ -391,7 +450,7 @@ export default function NewCarPage() {
                           type="button"
                           disabled={idx === images.length - 1}
                           onClick={() => handleMoveImage(idx, 'right')}
-                          className="p-1 rounded bg-black/60 text-white hover:bg-rose-600 disabled:opacity-30"
+                          className="p-1 rounded bg-black/60 text-[#F4F2ED] hover:bg-[#C8A96B] hover:text-[#0B0B0A] disabled:opacity-30"
                         >
                           <ChevronRight className="w-3.5 h-3.5" />
                         </button>
@@ -402,25 +461,107 @@ export default function NewCarPage() {
               </div>
             </div>
           )}
+          {/* Video Upload Block */}
+          <div className="space-y-3 pt-6 border-t border-[#30302D]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-bold text-[#F4F2ED] uppercase tracking-wider flex items-center gap-2">
+                  <Film className="w-4 h-4 text-[#C8A96B]" />
+                  Vehicle Video ({videos.length} {videos.length === 1 ? 'Clip' : 'Clips'})
+                </h3>
+                <p className="text-xs text-[#A6A39C] mt-0.5">
+                  Optional walkaround or engine-start clip. Videos play first in the public gallery.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold text-[#A6A39C] uppercase tracking-widest">
+                MP4, WEBM, MOV • Max 100 MB
+              </span>
+            </div>
+
+            <label className="flex items-center justify-center gap-3 border-2 border-dashed border-[#30302D] hover:border-[#C8A96B]/50 rounded-2xl p-5 text-center cursor-pointer transition-colors bg-[#151514]">
+              <Film className="w-6 h-6 text-stone-500" />
+              <span className="text-xs font-bold text-[#F4F2ED]">
+                {uploadingVideo ? 'Uploading Video...' : 'Click to Upload Vehicle Video'}
+              </span>
+              <input
+                type="file"
+                multiple
+                accept="video/mp4,video/webm,video/quicktime,video/*"
+                onChange={handleVideoUpload}
+                disabled={uploadingVideo}
+                className="hidden"
+              />
+            </label>
+
+            {videos.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                {videos.map((vid, idx) => (
+                  <div
+                    key={idx}
+                    className="relative rounded-xl overflow-hidden border border-[#30302D] bg-black group"
+                  >
+                    <video
+                      src={vid.videoUrl}
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="w-full aspect-video object-cover"
+                    />
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#C8A96B] text-[#0B0B0A] text-[9px] font-bold uppercase tracking-wider shadow">
+                      Video {idx + 1}
+                    </span>
+
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveVideo(idx, 'left')}
+                        className="p-2 rounded-lg bg-black/70 text-[#F4F2ED] hover:bg-[#C8A96B] hover:text-[#0B0B0A] disabled:opacity-30"
+                        title="Move earlier"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteVideo(idx)}
+                        className="p-2 rounded-lg bg-red-950/80 hover:bg-red-600 text-red-300 hover:text-white"
+                        title="Delete video"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === videos.length - 1}
+                        onClick={() => handleMoveVideo(idx, 'right')}
+                        className="p-2 rounded-lg bg-black/70 text-[#F4F2ED] hover:bg-[#C8A96B] hover:text-[#0B0B0A] disabled:opacity-30"
+                        title="Move later"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* SECTION 2: BASIC VEHICLE ATTRIBUTES */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-white/10">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider pb-3 border-b border-[#30302D]">
             Core Vehicle Information
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {/* Brand */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Marque / Brand *
               </label>
               <select
                 required
                 value={formData.brandId}
                 onChange={(e) => setFormData({ ...formData, brandId: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 {brands.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -430,9 +571,8 @@ export default function NewCarPage() {
               </select>
             </div>
 
-            {/* Model */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Model Name *
               </label>
               <input
@@ -441,13 +581,12 @@ export default function NewCarPage() {
                 placeholder="e.g. M5 Competition"
                 value={formData.model}
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
-            {/* Year */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Year *
               </label>
               <input
@@ -456,14 +595,13 @@ export default function NewCarPage() {
                 placeholder="2024"
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
-            {/* Price */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Price (USD) *
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
+                Price (PKR) *
               </label>
               <input
                 type="number"
@@ -471,13 +609,12 @@ export default function NewCarPage() {
                 placeholder="125000"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
-            {/* Mileage */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Mileage (km)
               </label>
               <input
@@ -485,19 +622,18 @@ export default function NewCarPage() {
                 placeholder="3500"
                 value={formData.mileage}
                 onChange={(e) => setFormData({ ...formData, mileage: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
-            {/* Status */}
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Showroom Status
               </label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="Available">Available</option>
                 <option value="Reserved">Reserved</option>
@@ -508,14 +644,14 @@ export default function NewCarPage() {
         </div>
 
         {/* SECTION 3: TECHNICAL SPECIFICATIONS */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-white/10">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider pb-3 border-b border-[#30302D]">
             Technical Specifications
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Engine
               </label>
               <input
@@ -523,12 +659,12 @@ export default function NewCarPage() {
                 placeholder="e.g. 4.4L Twin-Turbo V8"
                 value={formData.engine}
                 onChange={(e) => setFormData({ ...formData, engine: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Horsepower
               </label>
               <input
@@ -536,18 +672,18 @@ export default function NewCarPage() {
                 placeholder="e.g. 617"
                 value={formData.horsepower}
                 onChange={(e) => setFormData({ ...formData, horsepower: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Transmission
               </label>
               <select
                 value={formData.transmission}
                 onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="Automatic">Automatic</option>
                 <option value="Manual">Manual</option>
@@ -556,13 +692,13 @@ export default function NewCarPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Fuel Type
               </label>
               <select
                 value={formData.fuelType}
                 onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="Petrol">Petrol</option>
                 <option value="Diesel">Diesel</option>
@@ -572,13 +708,13 @@ export default function NewCarPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Body Type
               </label>
               <select
                 value={formData.bodyType}
                 onChange={(e) => setFormData({ ...formData, bodyType: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="Sedan">Sedan</option>
                 <option value="Coupe">Coupe</option>
@@ -589,13 +725,13 @@ export default function NewCarPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Drivetrain
               </label>
               <select
                 value={formData.driveType}
                 onChange={(e) => setFormData({ ...formData, driveType: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="AWD">AWD</option>
                 <option value="RWD">RWD</option>
@@ -604,13 +740,13 @@ export default function NewCarPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Condition
               </label>
               <select
                 value={formData.condition}
                 onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               >
                 <option value="Brand New">Brand New</option>
                 <option value="Certified Luxury">Certified Luxury</option>
@@ -619,7 +755,7 @@ export default function NewCarPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Exterior Color
               </label>
               <input
@@ -627,12 +763,12 @@ export default function NewCarPage() {
                 placeholder="e.g. Marina Bay Blue"
                 value={formData.exteriorColor}
                 onChange={(e) => setFormData({ ...formData, exteriorColor: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Interior Color
               </label>
               <input
@@ -640,13 +776,13 @@ export default function NewCarPage() {
                 placeholder="e.g. Black Merino Leather"
                 value={formData.interiorColor}
                 onChange={(e) => setFormData({ ...formData, interiorColor: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
               Vehicle Narrative & Description
             </label>
             <textarea
@@ -654,7 +790,7 @@ export default function NewCarPage() {
               placeholder="Highlight provenance, bespoke options, performance metrics, and history..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
             />
           </div>
 
@@ -665,21 +801,21 @@ export default function NewCarPage() {
               id="featuredCheckbox"
               checked={formData.featured}
               onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-              className="w-4 h-4 rounded text-rose-600 bg-[#161922] border-white/20 focus:ring-rose-500"
+              className="w-4 h-4 rounded text-[#C8A96B] bg-[#151514] border-[#30302D] focus:ring-[#C8A96B]"
             />
-            <label htmlFor="featuredCheckbox" className="text-xs font-semibold text-white cursor-pointer select-none">
+            <label htmlFor="featuredCheckbox" className="text-xs font-semibold text-[#F4F2ED] cursor-pointer select-none">
               Mark as Featured Vehicle (Displays in Homepage Featured Collection)
             </label>
           </div>
         </div>
 
         {/* SECTION 4: LUXURY OPTIONS & FEATURES */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
-            <h2 className="text-base font-bold text-white uppercase tracking-wider">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <div className="flex items-center justify-between pb-3 border-b border-[#30302D]">
+            <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider">
               Luxury Features & Packages
             </h2>
-            <span className="text-[11px] text-slate-400">
+            <span className="text-[11px] text-[#A6A39C]">
               {features.length} options selected
             </span>
           </div>
@@ -691,12 +827,12 @@ export default function NewCarPage() {
               placeholder="Add package (e.g. Night Package, Carbon Roof)"
               value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
-              className="flex-1 bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-rose-500"
+              className="flex-1 bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
             />
             <button
               type="button"
               onClick={handleAddFeature}
-              className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold uppercase transition-colors"
+              className="px-4 py-2 bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] rounded-xl text-xs font-bold uppercase transition-colors"
             >
               Add
             </button>
@@ -707,13 +843,13 @@ export default function NewCarPage() {
             {features.map((feat) => (
               <span
                 key={feat}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#161922] border border-white/10 text-xs text-slate-200"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#151514] border border-[#30302D] text-xs text-[#F4F2ED]"
               >
                 <span>{feat}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveFeature(feat)}
-                  className="text-slate-400 hover:text-red-400"
+                  className="text-[#A6A39C] hover:text-red-400"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -726,14 +862,14 @@ export default function NewCarPage() {
         <div className="flex items-center justify-end gap-4 pt-4">
           <Link
             href="/admin/cars"
-            className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold uppercase"
+            className="px-6 py-3 rounded-xl bg-[#1D1C19] hover:bg-[#30302D] text-[#A6A39C] text-xs font-bold uppercase transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-rose-950/60"
+            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#C8A96B]/15"
           >
             <Save className="w-4 h-4" />
             <span>{submitting ? 'Publishing Vehicle...' : 'Save & Publish Vehicle'}</span>

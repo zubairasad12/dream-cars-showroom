@@ -10,48 +10,39 @@ module.exports = {
     extend: {
       colors: {
         luxury: {
-          bg: '#090A0E',
-          card: '#111319',
-          cardHover: '#161922',
-          surface: '#1A1D27',
-          border: 'rgba(255, 255, 255, 0.08)',
-          borderHover: 'rgba(255, 255, 255, 0.2)',
-          red: '#E11D48',
-          redHover: '#BE123C',
-          redGlow: 'rgba(225, 29, 72, 0.25)',
-          silver: '#E2E8F0',
-          silverMuted: '#94A3B8',
-          darkMuted: '#64748B',
-          gold: '#F59E0B',
-          carbon: '#1E212B'
-        }
+          bg: '#0B0B0A',            // Main background (70%)
+          secondary: '#151514',     // Secondary background
+          card: '#1D1C19',          // Card background
+          cardHover: '#242320',     // Slightly elevated card
+          border: '#30302D',        // Borders & dividers
+          borderHover: '#C8A96B',   // Subtle gold border on hover
+          primaryText: '#F4F2ED',   // Primary headings & text (20%)
+          secondaryText: '#A6A39C', // Paragraphs & metadata
+          gold: '#C8A96B',          // Champagne Gold Brand Accent (10%)
+          goldLight: '#D8C08A',     // Light gold hover
+          goldMuted: 'rgba(200, 169, 107, 0.15)',
+          goldBorder: 'rgba(200, 169, 107, 0.35)',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'luxury-glow': 'radial-gradient(ellipse at top, rgba(225, 29, 72, 0.12), transparent 70%)',
-        'carbon-pattern': 'linear-gradient(45deg, #111 25%, transparent 25%), linear-gradient(-45deg, #111 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #111 75%), linear-gradient(-45deg, transparent 75%, #111 75%)'
+        'gold-gradient': 'linear-gradient(135deg, #D8C08A 0%, #C8A96B 50%, #B69455 100%)',
+        'gold-glow': 'radial-gradient(ellipse at top, rgba(200, 169, 107, 0.12), transparent 70%)',
       },
       boxShadow: {
-        'luxury': '0 20px 40px -15px rgba(0, 0, 0, 0.7)',
-        'luxury-red': '0 10px 30px -10px rgba(225, 29, 72, 0.35)',
-        'card-glow': '0 0 25px rgba(255, 255, 255, 0.03)',
+        'subtle-card': '0 10px 30px -10px rgba(0, 0, 0, 0.6)',
+        'gold-subtle': '0 0 20px rgba(200, 169, 107, 0.15)',
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(225, 29, 72, 0.4)' },
-          '50%': { boxShadow: '0 0 25px rgba(225, 29, 72, 0.8)' },
-        }
       },
       animation: {
-        fadeIn: 'fadeIn 0.5s ease-out forwards',
-        pulseGlow: 'pulseGlow 2.5s infinite',
+        fadeIn: 'fadeIn 0.4s ease-out forwards',
       }
     },
   },

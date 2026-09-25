@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Send, CheckCircle, AlertCircle, MessageCircle, PhoneCall } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, MessageCircle } from 'lucide-react';
 import { Car } from '@/lib/types';
-import { getCarWhatsAppLink, SHOWROOM_PHONE, formatPrice } from '@/lib/utils';
+import { getCarWhatsAppLink, SHOWROOM_PHONE } from '@/lib/utils';
 
 interface Props {
   car: Car;
@@ -55,26 +55,26 @@ export default function CarDetailInquiryForm({ car }: Props) {
   };
 
   return (
-    <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+    <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
       <div>
-        <span className="text-[11px] font-bold text-rose-500 uppercase tracking-widest block mb-1">
+        <span className="text-[11px] font-bold text-[#C8A96B] uppercase tracking-widest block mb-1">
           RESERVE OR INQUIRE
         </span>
-        <h3 className="text-xl font-bold text-white">
+        <h3 className="text-xl font-bold text-[#F4F2ED]">
           Send Showroom Inquiry
         </h3>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#A6A39C] mt-1">
           Our concierge will promptly respond with complete vehicle dossier.
         </p>
       </div>
 
       {success ? (
-        <div className="text-center py-8 space-y-3 bg-[#161922] rounded-2xl p-4 border border-emerald-500/30">
+        <div className="text-center py-8 space-y-3 bg-[#151514] rounded-2xl p-4 border border-emerald-500/30">
           <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
             <CheckCircle className="w-6 h-6" />
           </div>
-          <h4 className="text-base font-bold text-white">Inquiry Received</h4>
-          <p className="text-xs text-slate-300">
+          <h4 className="text-base font-bold text-[#F4F2ED]">Inquiry Received</h4>
+          <p className="text-xs text-[#A6A39C]">
             Thank you, {formData.name}. Our luxury sales manager has been notified and will contact you via phone/WhatsApp.
           </p>
           <div className="pt-2">
@@ -82,7 +82,7 @@ export default function CarDetailInquiryForm({ car }: Props) {
               href={getCarWhatsAppLink(car)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0B0B0A] text-xs font-bold transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Continue on WhatsApp: 03099491835</span>
@@ -99,7 +99,7 @@ export default function CarDetailInquiryForm({ car }: Props) {
           )}
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-[#A6A39C] uppercase tracking-wider block mb-1">
               Your Full Name *
             </label>
             <input
@@ -108,12 +108,12 @@ export default function CarDetailInquiryForm({ car }: Props) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g. Asad Malik"
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-[#A6A39C] uppercase tracking-wider block mb-1">
               Phone Number *
             </label>
             <input
@@ -122,12 +122,12 @@ export default function CarDetailInquiryForm({ car }: Props) {
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               placeholder="e.g. 0309 1234567"
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-[#A6A39C] uppercase tracking-wider block mb-1">
               Email Address *
             </label>
             <input
@@ -136,26 +136,26 @@ export default function CarDetailInquiryForm({ car }: Props) {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="name@domain.com"
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-[#A6A39C] uppercase tracking-wider block mb-1">
               Inquiry Note
             </label>
             <textarea
               rows={3}
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/60 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15 flex items-center justify-center gap-2"
           >
             <span>{loading ? 'Transmitting...' : 'Send Inquiry To Showroom'}</span>
             <Send className="w-4 h-4" />
@@ -164,15 +164,15 @@ export default function CarDetailInquiryForm({ car }: Props) {
       )}
 
       {/* WhatsApp quick contact */}
-      <div className="pt-2 text-center border-t border-white/10">
-        <p className="text-[11px] text-slate-400 mb-2">Prefer instant conversation?</p>
+      <div className="pt-2 text-center border-t border-[#30302D]">
+        <p className="text-[11px] text-[#A6A39C] mb-2">Prefer instant conversation?</p>
         <a
           href={getCarWhatsAppLink(car)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#C8A96B] hover:text-[#D8C08A] transition-colors"
         >
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle className="w-4 h-4 text-emerald-400" />
           <span>Chat about this vehicle on WhatsApp: {SHOWROOM_PHONE}</span>
         </a>
       </div>

@@ -17,7 +17,7 @@ export async function GET() {
           phone: '03099491835',
           whatsapp: '923099491835',
           email: 'contact@dreamcars.com',
-          address: 'Dream Cars Luxury Pavilion, Main Boulevard, Gulberg III, Lahore, Pakistan',
+          address: 'Dream Cars Showroom, Khanewal Road, Front of Stadium Gate, Vehari, Punjab, Pakistan',
           openingHours: 'Monday - Saturday: 10:00 AM - 9:00 PM | Sunday: By Exclusive Appointment',
           socialLinks: JSON.stringify({
             facebook: 'https://facebook.com/dreamcars',
@@ -77,7 +77,7 @@ export async function PUT(req: NextRequest) {
         phone: phone || '03099491835',
         whatsapp: whatsapp || '923099491835',
         email: email || 'contact@dreamcars.com',
-        address: address || 'Dream Cars Luxury Pavilion, Main Boulevard, Gulberg III, Lahore, Pakistan',
+        address: address || 'Dream Cars Showroom, Khanewal Road, Front of Stadium Gate, Vehari, Punjab, Pakistan',
         openingHours: openingHours || 'Mon - Sat: 10:00 AM - 9:00 PM',
         socialLinks: typeof socialLinks === 'object' ? JSON.stringify(socialLinks) : (socialLinks || '{}'),
         aboutText: aboutText || '',

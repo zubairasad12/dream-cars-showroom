@@ -7,6 +7,44 @@ export interface CarImage {
   createdAt?: string | Date;
 }
 
+export interface CarVideo {
+  id: string;
+  carId: string;
+  videoUrl: string;
+  sortOrder: number;
+  createdAt?: string | Date;
+}
+
+export interface BlogCategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  createdAt?: string | Date;
+  _count?: { posts: number };
+}
+
+export interface BlogPostItem {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content?: string;
+  coverImage?: string | null;
+  author: string;
+  tags: string | string[];
+  readingTime: number;
+  featured: boolean;
+  status: 'Draft' | 'Published' | string;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  canonicalUrl?: string | null;
+  publishDate: string | Date;
+  categoryId?: string | null;
+  category?: BlogCategoryItem | null;
+  relatedCars?: Car[];
+}
+
 export interface Brand {
   id: string;
   name: string;
@@ -44,6 +82,7 @@ export interface Car {
   createdAt?: string | Date;
   updatedAt?: string | Date;
   images: CarImage[];
+  videos: CarVideo[];
 }
 
 export interface Inquiry {

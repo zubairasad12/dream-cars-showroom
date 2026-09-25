@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, SlidersHorizontal, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight } from 'lucide-react';
 import { Brand } from '@/lib/types';
 
 export default function QuickSearch() {
@@ -41,25 +41,25 @@ export default function QuickSearch() {
 
   return (
     <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-      <div className="bg-[#101218]/95 border border-white/15 rounded-3xl p-6 lg:p-8 backdrop-blur-xl shadow-2xl shadow-black/80">
+      <div className="bg-[#151514] border border-[#30302D] rounded-3xl p-6 lg:p-8 shadow-2xl shadow-black/80">
         
         {/* Header bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#30302D]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-rose-600/15 text-rose-500">
+            <div className="p-2 rounded-xl bg-[#1D1C19] border border-[#30302D] text-[#C8A96B]">
               <Search className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white tracking-wide">
+              <h3 className="text-base font-bold text-[#F4F2ED] tracking-wide">
                 Quick Vehicle Search
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#A6A39C]">
                 Filter our showroom inventory by exact specifications
               </p>
             </div>
           </div>
 
-          <span className="text-xs font-semibold text-rose-400 uppercase tracking-widest self-start sm:self-center">
+          <span className="text-xs font-semibold text-[#C8A96B] uppercase tracking-widest self-start sm:self-center">
             Dream Cars Filter Matrix
           </span>
         </div>
@@ -69,15 +69,15 @@ export default function QuickSearch() {
           
           {/* Brand */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
               Brand
             </label>
             <select
               value={selectedBrand}
               onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             >
-              <option value="all">All Luxury Brands</option>
+              <option value="all">All Brands</option>
               {brands.map((b) => (
                 <option key={b.id} value={b.slug}>
                   {b.name}
@@ -88,55 +88,55 @@ export default function QuickSearch() {
 
           {/* Model */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
               Model
             </label>
             <input
               type="text"
-              placeholder="e.g. M5, GT, 911, Type R"
+              placeholder="e.g. Corolla, Civic, Alto, Sportage"
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs placeholder:text-[#A6A39C]/50 focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           {/* Min Price */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Min Price ($)
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
+              Min Price (PKR)
             </label>
             <input
               type="number"
-              placeholder="Min USD"
+              placeholder="Min PKR"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs placeholder:text-[#A6A39C]/50 focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           {/* Max Price */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Max Price ($)
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
+              Max Price (PKR)
             </label>
             <input
               type="number"
-              placeholder="Max USD"
+              placeholder="Max PKR"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs placeholder:text-[#A6A39C]/50 focus:outline-none focus:border-[#C8A96B] transition-colors"
             />
           </div>
 
           {/* Year */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
               Model Year
             </label>
             <select
               value={year}
               onChange={(e) => setYear(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             >
               <option value="">Any Year</option>
               <option value="2025">2025</option>
@@ -150,13 +150,13 @@ export default function QuickSearch() {
 
           {/* Fuel Type */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
               Fuel Type
             </label>
             <select
               value={fuelType}
               onChange={(e) => setFuelType(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             >
               <option value="all">All Fuels</option>
               <option value="Petrol">Petrol</option>
@@ -168,13 +168,13 @@ export default function QuickSearch() {
 
           {/* Transmission */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6A39C]">
               Transmission
             </label>
             <select
               value={transmission}
               onChange={(e) => setTransmission(e.target.value)}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 transition-colors"
+              className="w-full bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] transition-colors"
             >
               <option value="all">All Transmissions</option>
               <option value="Automatic">Automatic</option>
@@ -187,7 +187,7 @@ export default function QuickSearch() {
           <div className="flex items-end">
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg shadow-rose-950/60 hover:shadow-rose-600/40"
+              className="w-full flex items-center justify-center gap-2 bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg hover:shadow-[#C8A96B]/20"
             >
               <span>SEARCH CARS</span>
               <ArrowRight className="w-4 h-4" />

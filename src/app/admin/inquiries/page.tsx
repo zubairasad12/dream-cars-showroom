@@ -8,12 +8,8 @@ import {
   Phone, 
   Mail, 
   MessageCircle, 
-  Car, 
-  CheckCircle, 
-  Clock, 
   AlertCircle,
-  ExternalLink,
-  ChevronDown
+  ExternalLink
 } from 'lucide-react';
 import { Inquiry } from '@/lib/types';
 
@@ -80,12 +76,12 @@ export default function AdminInquiriesPage() {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#30302D]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
             Client Inquiries & Leads
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#A6A39C] mt-1">
             Manage inquiries, trade-in valuations, and contact requests submitted through the showroom website.
           </p>
         </div>
@@ -93,11 +89,11 @@ export default function AdminInquiriesPage() {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Type:</span>
+            <span className="text-xs text-[#A6A39C]">Type:</span>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="bg-[#111319] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+              className="bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
             >
               <option value="all">All Inquiries</option>
               <option value="Car Inquiry">Car Inquiries</option>
@@ -107,11 +103,11 @@ export default function AdminInquiriesPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Status:</span>
+            <span className="text-xs text-[#A6A39C]">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-[#111319] text-white border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500"
+              className="bg-[#1D1C19] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#C8A96B]"
             >
               <option value="all">All Statuses</option>
               <option value="New">New</option>
@@ -130,21 +126,21 @@ export default function AdminInquiriesPage() {
       )}
 
       {/* Inquiries Table */}
-      <div className="bg-[#111319] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl overflow-hidden shadow-2xl">
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-400">
+          <div className="p-12 text-center text-xs text-[#A6A39C]">
             Loading inquiries...
           </div>
         ) : inquiries.length === 0 ? (
           <div className="p-12 text-center space-y-2">
-            <Inbox className="w-8 h-8 text-slate-500 mx-auto" />
-            <p className="text-sm font-semibold text-white">No inquiries found</p>
-            <p className="text-xs text-slate-400">Client leads will appear here automatically when submitted.</p>
+            <Inbox className="w-8 h-8 text-stone-500 mx-auto" />
+            <p className="text-sm font-semibold text-[#F4F2ED]">No inquiries found</p>
+            <p className="text-xs text-[#A6A39C]">Client leads will appear here automatically when submitted.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#161922] text-slate-400 font-bold uppercase tracking-wider border-b border-white/10">
+              <thead className="bg-[#151514] text-[#A6A39C] font-bold uppercase tracking-wider border-b border-[#30302D]">
                 <tr>
                   <th className="py-3.5 px-4">Client</th>
                   <th className="py-3.5 px-4">Type & Subject</th>
@@ -154,7 +150,7 @@ export default function AdminInquiriesPage() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-[#30302D] text-[#A6A39C]">
                 {inquiries.map((inq) => {
                   let tradeDetails: any = null;
                   if (inq.tradeInDetails) {
@@ -167,19 +163,19 @@ export default function AdminInquiriesPage() {
                     <tr key={inq.id} className="hover:bg-white/[0.02] transition-colors">
                       {/* Customer Info */}
                       <td className="py-4 px-4">
-                        <span className="font-bold text-white text-sm block">
+                        <span className="font-bold text-[#F4F2ED] text-sm block">
                           {inq.name}
                         </span>
-                        <div className="flex flex-col gap-0.5 mt-1 text-[11px] text-slate-400">
+                        <div className="flex flex-col gap-0.5 mt-1 text-[11px] text-[#A6A39C]">
                           <span className="flex items-center gap-1.5">
-                            <Phone className="w-3 h-3 text-slate-500" />
-                            <a href={`tel:${inq.phone}`} className="hover:text-white">
+                            <Phone className="w-3 h-3 text-[#C8A96B]" />
+                            <a href={`tel:${inq.phone}`} className="hover:text-[#F4F2ED]">
                               {inq.phone}
                             </a>
                           </span>
                           <span className="flex items-center gap-1.5">
-                            <Mail className="w-3 h-3 text-slate-500" />
-                            <a href={`mailto:${inq.email}`} className="hover:text-white">
+                            <Mail className="w-3 h-3 text-[#C8A96B]" />
+                            <a href={`mailto:${inq.email}`} className="hover:text-[#F4F2ED]">
                               {inq.email}
                             </a>
                           </span>
@@ -189,20 +185,20 @@ export default function AdminInquiriesPage() {
                       {/* Subject & Message */}
                       <td className="py-4 px-4 max-w-sm">
                         <div className="flex items-center gap-1.5 mb-1">
-                          <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-rose-400">
+                          <span className="px-2 py-0.5 rounded bg-[#151514] border border-[#30302D] text-[9px] font-bold uppercase tracking-wider text-[#C8A96B]">
                             {inq.inquiryType}
                           </span>
-                          <span className="font-semibold text-white truncate text-xs">
+                          <span className="font-semibold text-[#F4F2ED] truncate text-xs">
                             {inq.subject}
                           </span>
                         </div>
-                        <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed">
+                        <p className="text-[#A6A39C] text-xs line-clamp-2 leading-relaxed">
                           {inq.message}
                         </p>
 
                         {tradeDetails && (
-                          <div className="mt-1.5 p-2 rounded-lg bg-[#161922] text-[10px] text-slate-300 border border-white/5">
-                            Trade Vehicle: <strong>{tradeDetails.currentCar} ({tradeDetails.year})</strong> • Est: ${tradeDetails.estimatedValue}
+                          <div className="mt-1.5 p-2 rounded-lg bg-[#151514] text-[10px] text-[#A6A39C] border border-[#30302D]">
+                            Trade Vehicle: <strong className="text-[#F4F2ED]">{tradeDetails.currentCar} ({tradeDetails.year})</strong> • Est: ${tradeDetails.estimatedValue}
                           </div>
                         )}
                       </td>
@@ -213,18 +209,18 @@ export default function AdminInquiriesPage() {
                           <Link
                             href={`/cars/${inq.car.id}`}
                             target="_blank"
-                            className="text-xs font-bold text-rose-400 hover:underline flex items-center gap-1"
+                            className="text-xs font-bold text-[#C8A96B] hover:underline flex items-center gap-1"
                           >
                             <span>{inq.car.year} {inq.car.brand.name} {inq.car.model}</span>
                             <ExternalLink className="w-3 h-3" />
                           </Link>
                         ) : (
-                          <span className="text-slate-500 text-[11px]">General Inquiry</span>
+                          <span className="text-stone-500 text-[11px]">General Inquiry</span>
                         )}
                       </td>
 
                       {/* Date */}
-                      <td className="py-4 px-4 text-slate-400 whitespace-nowrap text-[11px]">
+                      <td className="py-4 px-4 text-[#A6A39C] whitespace-nowrap text-[11px]">
                         {new Date(inq.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -239,7 +235,7 @@ export default function AdminInquiriesPage() {
                           onChange={(e) => handleStatusChange(inq.id, e.target.value)}
                           className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider border focus:outline-none ${
                             inq.status === 'New'
-                              ? 'bg-rose-950/80 text-rose-400 border-rose-500/40'
+                              ? 'bg-[#C8A96B]/15 text-[#C8A96B] border-[#C8A96B]/40'
                               : inq.status === 'Contacted'
                               ? 'bg-amber-950/80 text-amber-300 border-amber-500/40'
                               : 'bg-emerald-950/80 text-emerald-400 border-emerald-500/40'
@@ -254,7 +250,6 @@ export default function AdminInquiriesPage() {
                       {/* Actions */}
                       <td className="py-4 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {/* Direct WhatsApp Contact to client */}
                           <a
                             href={`https://wa.me/${inq.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                               `Hello ${inq.name}, this is Dream Cars Showroom regarding your inquiry: ${inq.subject}.`

@@ -3,13 +3,29 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('--- Seeding Dream Cars Showroom Database ---');
+// NOTE: All prices are SAMPLE values in PKR for demonstration.
+// The admin can change every price and specification from the admin panel.
+// Car photos are intentionally left empty (except the local Peugeot 2008
+// showcase images) so the showroom owner can upload real photos via
+// /admin/cars — vehicles without photos show a placeholder card.
 
-  // 1. Showroom Settings
+async function main() {
+  console.log('--- Seeding Dream Cars (Vehari, Pakistan) Database ---');
+
+  // 0. Clean previous inventory for a fresh Pakistani showroom
+  await prisma.inquiry.deleteMany();
+  await prisma.carImage.deleteMany();
+  await prisma.car.deleteMany();
+  await prisma.brand.deleteMany();
+
+  // 1. Showroom Settings — Vehari, Punjab, Pakistan
   await prisma.settings.upsert({
     where: { id: 'default-settings' },
-    update: {},
+    update: {
+      address: 'Dream Cars Showroom, Vehari, Punjab, Pakistan',
+      aboutText:
+        'Dream Cars is Vehari’s trusted destination for quality vehicles. From brand new locally assembled favourites and fresh Japanese imports to certified pre-owned luxury SUVs, every vehicle on our floor is verified, inspected on 150 points, and priced transparently in PKR.'
+    },
     create: {
       id: 'default-settings',
       showroomName: 'Dream Cars',
@@ -17,8 +33,8 @@ async function main() {
       phone: '03099491835',
       whatsapp: '923099491835',
       email: 'contact@dreamcars.com',
-      address: 'Dream Cars Luxury Pavilion, Main Boulevard, Gulberg III, Lahore, Pakistan',
-      openingHours: 'Monday - Saturday: 10:00 AM - 9:00 PM | Sunday: By Exclusive Appointment',
+      address: 'Dream Cars Showroom, Vehari, Punjab, Pakistan',
+      openingHours: 'Monday - Saturday: 10:00 AM - 9:00 PM | Sunday: By Appointment',
       socialLinks: JSON.stringify({
         facebook: 'https://facebook.com/dreamcars',
         instagram: 'https://instagram.com/dreamcars',
@@ -26,7 +42,8 @@ async function main() {
         youtube: 'https://youtube.com/@dreamcars',
         tiktok: 'https://tiktok.com/@dreamcars'
       }),
-      aboutText: 'Dream Cars is the preeminent destination for connoisseurs of automotive distinction. Representing the pinnacle of German precision, British refinement, and Japanese perfection, every automobile in our climate-controlled gallery undergoes a stringent 150-point provenance and mechanical verification.'
+      aboutText:
+        'Dream Cars is Vehari’s trusted destination for quality vehicles. From brand new locally assembled favourites and fresh Japanese imports to certified pre-owned luxury SUVs, every vehicle on our floor is verified, inspected on 150 points, and priced transparently in PKR.'
     }
   });
 
@@ -42,548 +59,991 @@ async function main() {
     }
   });
 
-  // 3. Luxury Brands
+  // 3. Brands relevant to the Pakistani market
   const brandsData = [
-    {
-      name: 'BMW',
-      slug: 'bmw',
-      logo: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=300&q=80',
-      description: 'The Ultimate Driving Machine. German engineering mastery, uncompromising performance, and dynamic elegance.'
-    },
-    {
-      name: 'Mercedes-Benz',
-      slug: 'mercedes-benz',
-      logo: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=300&q=80',
-      description: 'The Best or Nothing. Timeless prestige, cutting-edge luxury innovations, and bespoke Mercedes-AMG craftsmanship.'
-    },
-    {
-      name: 'Porsche',
-      slug: 'porsche',
-      logo: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=300&q=80',
-      description: 'Driven by Dreams. Purebred sports car genetics engineered on the Nürburgring for daily driving thrills.'
-    },
-    {
-      name: 'Audi',
-      slug: 'audi',
-      logo: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=300&q=80',
-      description: 'Vorsprung durch Technik. Legendary Quattro all-wheel drive, razor-sharp LED aesthetics, and RS performance.'
-    },
-    {
-      name: 'Land Rover',
-      slug: 'land-rover',
-      logo: 'https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=300&q=80',
-      description: 'Above & Beyond. Sovereign luxury SUVs that command every terrain with peerless aristocratic composure.'
-    },
-    {
-      name: 'Lexus',
-      slug: 'lexus',
-      logo: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=300&q=80',
-      description: 'Experience Amazing. Japanese Takumi craftsmanship, whispering cabin silence, and bulletproof luxury reliability.'
-    },
-    {
-      name: 'Toyota',
-      slug: 'toyota',
-      logo: 'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?auto=format&fit=crop&w=300&q=80',
-      description: 'King of Off-Road & Reliability. World-conquering Land Cruiser heritage and modern hybrid sophistication.'
-    },
-    {
-      name: 'Honda',
-      slug: 'honda',
-      logo: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=300&q=80',
-      description: 'The Power of Dreams. Championship racing pedigree, precision manual gearboxes, and iconic Type R glory.'
-    },
-    {
-      name: 'Tesla',
-      slug: 'tesla',
-      logo: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=300&q=80',
-      description: 'Accelerating the Future. Ludicrous electric acceleration, autopilot capability, and minimalist architecture.'
-    },
-    {
-      name: 'Ford',
-      slug: 'ford',
-      logo: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=300&q=80',
-      description: 'American Muscle & Power. Legendary Mustang V8 roar and ferocious Raptor high-speed off-road domination.'
-    }
+    { name: 'Toyota', slug: 'toyota', description: 'Pakistan’s most trusted badge. Corolla, Yaris, Fortuner, Hilux and the legendary Land Cruiser — unmatched resale and reliability.' },
+    { name: 'Honda', slug: 'honda', description: 'The Power of Dreams. Civic, City, BR-V and refined Japanese hybrid imports loved across Punjab.' },
+    { name: 'Suzuki', slug: 'suzuki', description: 'Pakistan’s everyday champion. Alto, Wagon R, Cultus, Swift, Bolan and Ravi — economical to run, easy to maintain.' },
+    { name: 'Kia', slug: 'kia', description: 'Bold Korean design packed with features. Sportage, Sorento, Picanto, Stonic and Carnival.' },
+    { name: 'Hyundai', slug: 'hyundai', description: 'Premium Korean engineering for Pakistani families. Tucson, Elantra, Sonata and Santa Fe.' },
+    { name: 'Changan', slug: 'changan', description: 'Smart Chinese value. Alsvin sedan, Oshan X7 SUV and the practical Karvaan.' },
+    { name: 'MG', slug: 'mg', description: 'Modern British-badged crossovers. MG HS, ZS, ZS EV and GT with generous equipment levels.' },
+    { name: 'Proton', slug: 'proton', description: 'Malaysian quality sedans and SUVs. Saga and X70 with strong value for money.' },
+    { name: 'Peugeot', slug: 'peugeot', description: 'French flair and premium comfort. The 2025 Peugeot 2008 — Dream Cars’ signature showcase crossover.' },
+    { name: 'BMW', slug: 'bmw', description: 'The Ultimate Driving Machine. German engineering mastery and dynamic elegance.' },
+    { name: 'Mercedes-Benz', slug: 'mercedes-benz', description: 'The Best or Nothing. Timeless prestige and cutting-edge luxury.' },
+    { name: 'Audi', slug: 'audi', description: 'Vorsprung durch Technik. Quattro all-wheel drive and razor-sharp design.' },
+    { name: 'Porsche', slug: 'porsche', description: 'Driven by Dreams. Purebred sports car genetics for discerning collectors.' },
+    { name: 'Land Rover', slug: 'land-rover', description: 'Above & Beyond. Sovereign Range Rover luxury that commands every terrain.' },
+    { name: 'Lexus', slug: 'lexus', description: 'Experience Amazing. Japanese Takumi craftsmanship and bulletproof reliability.' }
   ];
 
   const brandMap = {};
   for (const b of brandsData) {
-    const brand = await prisma.brand.upsert({
-      where: { slug: b.slug },
-      update: b,
-      create: b
+    const brand = await prisma.brand.create({
+      data: { name: b.name, slug: b.slug, logo: '/logo.png', description: b.description }
     });
     brandMap[b.slug] = brand.id;
   }
 
-  // 4. Luxury Vehicles
+  // 4. Pakistan-focused vehicle inventory (sample PKR prices)
   const carsData = [
+    // ---------------- TOYOTA ----------------
     {
-      brandSlug: 'bmw',
-      model: 'M5 Competition (F90 LCI)',
+      brandSlug: 'toyota',
+      model: 'Corolla Altis Grande 1.8',
       year: 2024,
-      price: 122500,
-      mileage: 3800,
+      price: 7500000,
+      mileage: 18000,
       fuelType: 'Petrol',
-      transmission: 'Automatic (8-Speed M Steptronic)',
-      engine: '4.4L Twin-Turbocharged V8',
-      horsepower: 617,
+      transmission: 'CVT Automatic',
+      engine: '1.8L Dual VVT-i',
+      horsepower: 138,
       bodyType: 'Sedan',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Marina Bay Blue Metallic',
-      interiorColor: 'Silverstone Full Merino Leather',
-      driveType: 'AWD (M xDrive with 2WD mode)',
-      description: 'An absolute apex predator disguised as an executive luxury saloon. This pristine 2024 BMW M5 Competition combines devastating 617-horsepower twin-turbo V8 thrust with supreme daily touring capability. Features carbon ceramic brakes, M Performance carbon exhaust tips, executive massage seats, and Bowers & Wilkins diamond surround audio.',
-      features: JSON.stringify([
-        'Bowers & Wilkins Diamond Surround Sound',
-        'Carbon Ceramic Brakes with Gold Calipers',
-        'M Driver Package (190 mph top speed)',
-        'Heated & Ventilated Massage Seats',
-        'Head-Up Display with M View',
-        'Wireless Apple CarPlay & Android Auto',
-        'Carbon Fiber Roof & Interior Trim',
-        'Surround 360 Parking Cameras',
-        'Adaptive M Suspension Professional',
-        'Laserlight Headlamps with High-Beam Assist'
-      ]),
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'White Pearl',
+      interiorColor: 'Beige Fabric',
+      driveType: 'FWD',
+      description: 'Pakistan’s best-selling sedan in top Grande X trim. Single owner, complete service record from authorised dealership, token paid, file and biometric verified.',
+      features: JSON.stringify(['Push Start & Smart Entry', 'Cruise Control', 'Reverse Camera', 'Climate Control AC', 'Alloy Wheels', 'Original Books & File Verified']),
       featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'mercedes-benz',
-      model: 'AMG GT Black Series',
-      year: 2023,
-      price: 335000,
-      mileage: 1200,
-      fuelType: 'Petrol',
-      transmission: 'Dual-Clutch (7-Speed AMG SPEEDSHIFT)',
-      engine: '4.0L Flat-Plane Crank Biturbo V8',
-      horsepower: 720,
-      bodyType: 'Coupe',
-      condition: 'Pre-Owned Collector',
-      exteriorColor: 'Magmabeam Orange Metallic',
-      interiorColor: 'Exclusive Black Nappa Leather / DINAMICA with Orange Contrast Stitching',
-      driveType: 'RWD',
-      description: 'The pinnacle of Affalterbach motorsport pedigree. Born on the Nürburgring Nordschleife where it set the record for production cars. Features an active two-stage carbon fiber aerodynamic wing, flat-plane crankshaft 720hp V8, carbon roll cage, and 9-stage AMG traction control system.',
-      features: JSON.stringify([
-        'Active Carbon Fiber Aerodynamic Rear Wing',
-        'Carbon Fiber Bucket Seats with 4-Point Harness',
-        'Ceramic High-Performance Composite Brakes',
-        '9-Stage AMG Traction Control System',
-        'Full Carbon Fiber Bonnet & Underbody Paneling',
-        'Burmester High-End 3D Surround Sound',
-        'AMG Track Pace Data Telemetry Logger',
-        'Forged Lightweight AMG Wheels with Michelin Cup 2R Tires'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'porsche',
-      model: '911 GT3 RS (992)',
-      year: 2024,
-      price: 289000,
-      mileage: 650,
-      fuelType: 'Petrol',
-      transmission: 'Dual-Clutch (7-Speed PDK)',
-      engine: '4.0L Naturally Aspirated Flat-6',
-      horsepower: 518,
-      bodyType: 'Coupe',
-      condition: 'Brand New',
-      exteriorColor: 'Ice Grey Metallic with Pyro Red Accents',
-      interiorColor: 'Weissach Package Black Race-Tex with Guards Red Accents',
-      driveType: 'RWD',
-      description: 'The most ferocious road-legal track weapon ever forged in Weissach. Features DRS (Drag Reduction System) active aerodynamics, carbon fiber doors and wings, 9,000 RPM naturally aspirated scream, and multi-dial steering controls for bump, rebound, and differential settings.',
-      features: JSON.stringify([
-        'Weissach Package with Exposed Carbon Weave',
-        'DRS (Drag Reduction System) Hydraulically Activated Wing',
-        'Magnesium Lightweight Forged Wheels',
-        'Full Carbon Fiber Bucket Racing Seats',
-        'Front Axle Hydraulic Lift System',
-        'Porsche Ceramic Composite Brakes (PCCB)',
-        'Chrono Package with Lap Trigger Preparation',
-        'Bose Surround Sound System',
-        'LED Matrix Design Headlights in Black with PDLS+'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'audi',
-      model: 'RS7 Sportback Performance',
-      year: 2024,
-      price: 134500,
-      mileage: 2100,
-      fuelType: 'Petrol',
-      transmission: 'Automatic (8-Speed Tiptronic)',
-      engine: '4.0L Twin-Turbo TFSI V8',
-      horsepower: 621,
-      bodyType: 'Sedan',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Nardo Gray Matte',
-      interiorColor: 'Valcona Leather with RS Honeycomb Stitching',
-      driveType: 'AWD (Quattro with Sport Differential)',
-      description: 'A striking four-door grand coupé combining sinister aesthetic stance with breathtaking twin-turbo V8 capability. Propels from 0 to 60 mph in 3.3 seconds with Quattro grip, carbon-ceramic brakes, dynamic all-wheel steering, and an acoustic sound-dampened cabin.',
-      features: JSON.stringify([
-        'Bang & Olufsen Advanced 3D Sound System',
-        'Dynamic All-Wheel Steering',
-        'HD Matrix LED Headlights with Audi Laser Light',
-        'RS Sport Exhaust System with Oval Black Tips',
-        'Audi Virtual Cockpit Plus with RS Track Layouts',
-        'Panoramic Sunroof',
-        'Heated Rear Seats and 4-Zone Climate Control',
-        'Adaptive Air Suspension with RS Tuning'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'land-rover',
-      model: 'Range Rover SV Autobiography LWB',
-      year: 2024,
-      price: 238000,
-      mileage: 4200,
-      fuelType: 'Petrol',
-      transmission: 'Automatic (8-Speed ZF)',
-      engine: '4.4L Twin-Turbocharged V8',
-      horsepower: 606,
-      bodyType: 'SUV',
-      condition: 'Certified Luxury',
-      exteriorColor: 'British Racing Green Satin',
-      interiorColor: 'Perlino Semi-Aniline Leather with Caraway Accents',
-      driveType: 'AWD (Intelligent All-Wheel Drive)',
-      description: 'Peerless British aristocracy in long-wheelbase form. Features the SV Signature Suite with four luxury aircraft-style reclining executive seats, electrically deployable club table, integrated champagne refrigerator with crystal flutes, and Meridian 1600W 3D surround sound with active road noise cancellation.',
-      features: JSON.stringify([
-        'SV Signature Executive 4-Seat Rear Lounge',
-        'Meridian Signature 35-Speaker 1600W Audio',
-        'Integrated Champagne Chiller & Crystal Flutes',
-        'Electrically Deployable Veneer Club Table',
-        'Cabin Air Purification Pro with PM2.5 Filter',
-        'Electronic Active Differential with Torque Vectoring',
-        'All-Wheel Steering with 7.3° Rear Axle Turn',
-        'Soft-Close Doors with Power Assist'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'mercedes-benz',
-      model: 'Mercedes-Maybach S 580 4MATIC',
-      year: 2024,
-      price: 215000,
-      mileage: 1800,
-      fuelType: 'Hybrid',
-      transmission: 'Automatic (9G-TRONIC)',
-      engine: '4.0L V8 Biturbo with 48V EQ Boost',
-      horsepower: 496,
-      bodyType: 'Sedan',
-      condition: 'Brand New',
-      exteriorColor: 'Obsidian Black / Kalahari Gold Two-Tone',
-      interiorColor: 'Exclusive Maybach Macchiato Beige / Bronze Brown Pearl Nappa',
-      driveType: 'AWD',
-      description: 'The supreme expression of luxury motoring. Hand-painted two-tone coachline, executive first-class rear compartment with calf rests and hot stone massage, rear electrically motorized comfort doors, and active road noise cancellation integrated directly into the headrests.',
-      features: JSON.stringify([
-        'Two-Tone Custom Coachwork Paint',
-        'First-Class Executive Rear Cabin with Calf Support',
-        'MBUX High-End Rear Seat Entertainment with Dual 11.6 Screens',
-        'Burmester High-End 4D Surround Sound (30 Speakers)',
-        'Active Ambient Lighting with 64 Colors & 253 LEDs',
-        'Refrigerated Compartment in Rear Armrest',
-        'Rear-Axle Steering (10-Degree Angle)',
-        'Digital Light Technology with Projection Guidance'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1622199611138-72c807092158?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'honda',
-      model: 'Civic Type R (FL5)',
-      year: 2024,
-      price: 46800,
-      mileage: 1100,
-      fuelType: 'Petrol',
-      transmission: 'Manual (6-Speed with Rev-Match)',
-      engine: '2.0L VTEC Turbocharged 4-Cylinder',
-      horsepower: 315,
-      bodyType: 'Sports',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Championship White with Gloss Red Aero',
-      interiorColor: 'Type R Red Suede Effect Fabric Seats',
-      driveType: 'FWD (Helical Limited-Slip Differential)',
-      description: 'Directly featured in the official Dream Cars emblem! The FL5 generation Civic Type R is hailed by automotive journalists worldwide as the greatest front-wheel drive performance automobile ever constructed. Features a surgical 6-speed manual gearbox with aluminum teardrop shifter, Brembo 4-piston calipers, adaptive dampers, and LogR telemetry.',
-      features: JSON.stringify([
-        'Iconic Championship White Paint with Red Accents',
-        'Brembo 4-Piston Monobloc Front Calipers',
-        'Factory Aluminum Teardrop Shift Knob',
-        'Honda LogR Onboard Performance Datalogger',
-        'Active Valve Exhaust System',
-        'Wireless Apple CarPlay & Android Auto',
-        'Adaptive Damper System with +R Mode',
-        'Bose Centerpoint Premium 12-Speaker Sound'
-      ]),
-      featured: true,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1600&q=80',
-        '/logo.png'
-      ]
+      status: 'Available'
     },
     {
       brandSlug: 'toyota',
-      model: 'Land Cruiser 300 GR Sport',
+      model: 'Yaris ATIV X 1.5',
       year: 2024,
-      price: 129000,
-      mileage: 500,
+      price: 5850000,
+      mileage: 9500,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L Dual VVT-i',
+      horsepower: 105,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Attitude Black',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Fresh ATIV X top-variant Yaris with economical 1.5L engine — ideal first sedan for Vehari families. Accident-free, total genuine paint.',
+      features: JSON.stringify(['Push Start', 'Touchscreen Multimedia', 'Reverse Camera', 'Steering Controls', 'Keyless Entry']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'toyota',
+      model: 'Camry 2.5 Hybrid (Imported)',
+      year: 2023,
+      price: 12900000,
+      mileage: 24000,
+      fuelType: 'Hybrid',
+      transmission: 'e-CVT Automatic',
+      engine: '2.5L Dynamic Force + Electric Motor',
+      horsepower: 208,
+      bodyType: 'Sedan',
+      condition: 'Japanese Imported',
+      exteriorColor: 'Platinum White Pearl',
+      interiorColor: 'Ivory Leather',
+      driveType: 'FWD',
+      description: 'Fresh Japanese-imported Camry Hybrid giving 18+ km/l in city. Grade 4.5 auction sheet verified, untidy-free interior, radar cruise control.',
+      features: JSON.stringify(['Hybrid Synergy Drive 18+ km/l', 'Auction Sheet Verified', 'Adaptive Cruise Control', 'Lane Tracing Assist', 'Power Seats', '9-inch Infotainment']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'toyota',
+      model: 'Fortuner Legender 4x4',
+      year: 2024,
+      price: 18500000,
+      mileage: 15000,
       fuelType: 'Diesel',
-      transmission: 'Automatic (10-Speed Direct Shift)',
-      engine: '3.3L Twin-Turbo V6 Diesel',
-      horsepower: 304,
+      transmission: '6-Speed Automatic',
+      engine: '2.8L Turbo Diesel',
+      horsepower: 201,
       bodyType: 'SUV',
-      condition: 'Brand New',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Attitude Black',
+      interiorColor: 'Black Leather',
+      driveType: '4WD',
+      description: 'The status SUV of Punjab in desirable Legender trim. 4x4 diesel torque, full options, company-maintained with complete history.',
+      features: JSON.stringify(['Full-Time 4WD', 'Leather Ventilated Seats', '360 Camera', 'JBL Sound', 'Power Tailgate', 'Radar Cruise']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'toyota',
+      model: 'Hilux Revo GR Sport 4x4',
+      year: 2024,
+      price: 14900000,
+      mileage: 11000,
+      fuelType: 'Diesel',
+      transmission: '6-Speed Automatic',
+      engine: '2.8L Turbo Diesel',
+      horsepower: 201,
+      bodyType: 'Pickup',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'White Pearl',
+      interiorColor: 'Black Leather',
+      driveType: '4WD',
+      description: 'GR Sport Hilux in showroom condition — the toughest pickup for farm-to-highway duty around Vehari. Genuine low mileage, all documents clear.',
+      features: JSON.stringify(['GR Sport Package', 'Diff Lock', 'Roll Bar & Sports Bar', 'Alloy Wheels', 'Reverse Camera']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'toyota',
+      model: 'Land Cruiser 300 ZX',
+      year: 2023,
+      price: 85000000,
+      mileage: 20000,
+      fuelType: 'Petrol',
+      transmission: '10-Speed Automatic',
+      engine: '3.5L Twin-Turbo V6',
+      horsepower: 409,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
       exteriorColor: 'Precious White Pearl',
-      interiorColor: 'Black & Dark Red Gazoo Racing Leather',
-      driveType: 'AWD (Full-Time 4WD with Front & Rear E-Locker)',
-      description: 'The invincible king of luxury off-road conquest. Built on the TNGA-F ladder frame, the GR Sport edition features electronic-Kinetic Dynamic Suspension System (E-KDSS), triple differential locks, Multi-Terrain Monitor with underfloor transparent view, and JBL synthesis surround sound.',
-      features: JSON.stringify([
-        'E-KDSS (Electronic Kinetic Dynamic Suspension System)',
-        'Triple Differential Locks (Front, Center & Rear)',
-        'JBL Synthesis 14-Speaker Audio System',
-        'Multi-Terrain Monitor with Underfloor 3D View',
-        'Cool Box in Center Console',
-        'Head-Up Display & Dual Rear Screens',
-        'Crawl Control & Downhill Assist',
-        'Heated & Ventilated Front and Middle Row Seats'
-      ]),
+      interiorColor: 'Black Semi-Aniline Leather',
+      driveType: '4WD',
+      description: 'The invincible king — Land Cruiser 300 ZX twin-turbo V6. Flagship of our premium lounge, full option, verified import documents.',
+      features: JSON.stringify(['Multi-Terrain Select', 'Crawl Control', 'Cool Box', 'JBL Synthesis Audio', 'Head-Up Display', 'Rear Entertainment']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'toyota',
+      model: 'Prado TX-L 2.8D (Imported)',
+      year: 2022,
+      price: 41500000,
+      mileage: 38000,
+      fuelType: 'Diesel',
+      transmission: '6-Speed Automatic',
+      engine: '2.8L Turbo Diesel',
+      horsepower: 177,
+      bodyType: 'SUV',
+      condition: 'Japanese Imported',
+      exteriorColor: 'Attitude Black',
+      interiorColor: 'Black Leather',
+      driveType: '4WD',
+      description: 'Imported Prado TX-L diesel — the preferred long-route SUV of Pakistan. Auction sheet available, fresh tyres, suspension 100% healthy.',
+      features: JSON.stringify(['Auction Sheet Verified', '7-Seater', 'KDSS Suspension', 'Sunroof', 'Multi-Terrain Monitor']),
+      featured: false,
+      status: 'Available'
+    },
+
+    // ---------------- HONDA ----------------
+    {
+      brandSlug: 'honda',
+      model: 'Civic Orie 1.5 RS Turbo',
+      year: 2025,
+      price: 9850000,
+      mileage: 5000,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L VTEC Turbo',
+      horsepower: 176,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Meteoroid Grey',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: '11th-gen Civic RS Turbo in Orie top trim — Honda sensing suite, turbo punch and sharp looks. Nearly new, balanced under warranty.',
+      features: JSON.stringify(['Honda Sensing Suite', 'Lane Keep Assist', 'Adaptive Cruise', 'Sunroof', 'Wireless Charging', 'Leather Seats']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'honda',
+      model: 'City Aspire 1.5',
+      year: 2024,
+      price: 5650000,
+      mileage: 14000,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L i-VTEC',
+      horsepower: 119,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Lunar Silver',
+      interiorColor: 'Grey Fabric',
+      driveType: 'FWD',
+      description: 'Aspire 1.5 with sunroof and paddle shifters — the sensible family sedan with Honda reliability. First owner, dealership maintained.',
+      features: JSON.stringify(['Sunroof', 'Paddle Shifters', 'Touchscreen with Reverse Camera', 'Cruise Control', 'Push Start']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'honda',
+      model: 'BR-V S+',
+      year: 2024,
+      price: 6750000,
+      mileage: 8000,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L i-VTEC',
+      horsepower: 119,
+      bodyType: 'Crossover',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'White Pearl',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: '7-seater BR-V for joint families — Honda practicality with SUV-style stance. Low mileage, token and file complete.',
+      features: JSON.stringify(['7-Seater', 'Reverse Camera', 'Touchscreen', 'Keyless Entry', 'Roof Rails']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'honda',
+      model: 'HR-V e:HEV (Imported)',
+      year: 2024,
+      price: 8900000,
+      mileage: 12000,
+      fuelType: 'Hybrid',
+      transmission: 'e-CVT Automatic',
+      engine: '1.5L i-VTEC Hybrid',
+      horsepower: 121,
+      bodyType: 'Crossover',
+      condition: 'Japanese Imported',
+      exteriorColor: 'Platinum White',
+      interiorColor: 'Black Fabric',
+      driveType: 'AWD',
+      description: 'Fresh import HR-V hybrid with e:HEV all-wheel drive — 20+ km/l economy with SUV stance. Grade 4.5, auction sheet verified.',
+      features: JSON.stringify(['e:HEV Hybrid 20+ km/l', 'AWD', 'Auction Sheet Verified', 'Honda Sensing', 'Sunroof']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'honda',
+      model: 'Vezel RS Hybrid (Japanese Import)',
+      year: 2023,
+      price: 9750000,
+      mileage: 28000,
+      fuelType: 'Hybrid',
+      transmission: 'e-CVT Automatic',
+      engine: '1.5L i-VTEC Hybrid',
+      horsepower: 130,
+      bodyType: 'Crossover',
+      condition: 'Japanese Imported',
+      exteriorColor: 'Meteoroid Grey Metallic',
+      interiorColor: 'Black Combination',
+      driveType: 'AWD',
+      description: 'RS Hybrid Vezel — Pakistan’s favourite Japanese crossover. Paddle shifters, RS body kit, spotless interior, verified auction sheet.',
+      features: JSON.stringify(['RS Turbo Styling Package', 'Paddle Shifters', 'Auction Sheet Verified', 'Half-Leather Seats', 'City Brake Assist']),
+      featured: false,
+      status: 'Reserved'
+    },
+
+    // ---------------- SUZUKI ----------------
+    {
+      brandSlug: 'suzuki',
+      model: 'Alto VXL AGS',
+      year: 2024,
+      price: 3200000,
+      mileage: 12000,
+      fuelType: 'Petrol',
+      transmission: 'AGS (Auto Gear Shift)',
+      engine: '660cc K10B',
+      horsepower: 66,
+      bodyType: 'Hatchback',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Solid White',
+      interiorColor: 'Grey Fabric',
+      driveType: 'FWD',
+      description: 'Top-variant Alto VXL AGS — the city runabout of Pakistan with 18+ km/l economy. Genuine mileage, company warranty intact.',
+      features: JSON.stringify(['AGS Automatic', 'Power Windows', 'Central Locking', 'Alloy Wheels', 'Infotainment with Reverse Camera']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'suzuki',
+      model: 'Wagon R VXL AGS',
+      year: 2023,
+      price: 3480000,
+      mileage: 22000,
+      fuelType: 'Petrol',
+      transmission: 'AGS (Auto Gear Shift)',
+      engine: '1.0L K10B',
+      horsepower: 67,
+      bodyType: 'Hatchback',
+      condition: 'Used',
+      exteriorColor: 'Super Pearl Red',
+      interiorColor: 'Grey Fabric',
+      driveType: 'FWD',
+      description: 'Spacious Wagon R VXL with tall-boy seating and 20 km/l economy. Family maintained, new tyres, no work required.',
+      features: JSON.stringify(['AGS Automatic', 'Keyless Entry', 'Power Steering', 'Dual Airbags', 'AC Heater Perfect']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'suzuki',
+      model: 'Cultus VXL AGS',
+      year: 2024,
+      price: 4050000,
+      mileage: 10000,
+      fuelType: 'Petrol',
+      transmission: 'AGS (Auto Gear Shift)',
+      engine: '1.0L K10B',
+      horsepower: 67,
+      bodyType: 'Hatchback',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Pearl Black',
+      interiorColor: 'Beige Fabric',
+      driveType: 'FWD',
+      description: 'VXL AGS Cultus with touchscreen and alloys — the complete family hatchback. First owner, scratch-less, all documents original.',
+      features: JSON.stringify(['AGS Automatic', 'Touchscreen Multimedia', 'Reverse Camera', 'Alloy Wheels', 'Remote Key']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'suzuki',
+      model: 'Swift GLX CVT',
+      year: 2024,
+      price: 5150000,
+      mileage: 6500,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.2L K12M',
+      horsepower: 82,
+      bodyType: 'Hatchback',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Solid Red',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Top-trim Swift GLX CVT — sporty, loaded and fun. Cruise control, push start and ESP in a hatchback that feels premium.',
+      features: JSON.stringify(['Cruise Control', 'Push Start', 'ESP & Hill Hold', 'LED Projector Lamps', 'Touchscreen with Reverse Camera']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'suzuki',
+      model: 'Bolan VX Euro II',
+      year: 2024,
+      price: 2350000,
+      mileage: 5000,
+      fuelType: 'Petrol',
+      transmission: '5-Speed Manual',
+      engine: '796cc F8B',
+      horsepower: 40,
+      bodyType: 'Van',
+      condition: 'Used',
+      exteriorColor: 'Solid White',
+      interiorColor: 'Grey Fabric',
+      driveType: 'RWD',
+      description: 'The trusted family van of Pakistan — 7-seater Bolan for city and village routes. Fresh condition, CNG-compatible, documents clear.',
+      features: JSON.stringify(['7-Seater', 'AC', 'New Tyres', 'CNG Compatible', 'Original Documents']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'suzuki',
+      model: 'Ravi Euro II',
+      year: 2024,
+      price: 2480000,
+      mileage: 9000,
+      fuelType: 'Petrol',
+      transmission: '5-Speed Manual',
+      engine: '796cc F8B',
+      horsepower: 40,
+      bodyType: 'Pickup',
+      condition: 'Used',
+      exteriorColor: 'Solid White',
+      interiorColor: 'Grey Fabric',
+      driveType: 'RWD',
+      description: 'Hard-working Ravi pickup for business and farm loads. Engine and suspension freshly overhauled, ready for duty.',
+      features: JSON.stringify(['CNG Compatible', 'New Suspension Bushes', 'Strong Cabin AC', 'Original File']),
+      featured: false,
+      status: 'Available'
+    },
+
+    // ---------------- KIA ----------------
+    {
+      brandSlug: 'kia',
+      model: 'Sportage AWD 1.6T',
+      year: 2024,
+      price: 11900000,
+      mileage: 13000,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.6L T-GDI Turbo',
+      horsepower: 174,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Snow White Pearl',
+      interiorColor: 'Black Leather',
+      driveType: 'AWD',
+      description: 'Fully-loaded Sportage AWD — panoramic roof, ventilated seats and 10.25-inch cluster. Pakistan’s favourite premium-badged SUV.',
+      features: JSON.stringify(['Panoramic Sunroof', 'Ventilated Seats', '10.25" Digital Cluster', '360 Camera', 'Wireless CarPlay', 'Lane Keep Assist']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'kia',
+      model: 'Sorento AWD 2.2D',
+      year: 2024,
+      price: 15400000,
+      mileage: 16000,
+      fuelType: 'Diesel',
+      transmission: '8-Speed Automatic',
+      engine: '2.2L Turbo Diesel',
+      horsepower: 200,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Silky Silver',
+      interiorColor: 'Black Leather',
+      driveType: 'AWD',
+      description: '7-seater Sorento diesel AWD — motorway cruiser with real towing muscle. Company maintained, complete service history.',
+      features: JSON.stringify(['7-Seater', 'Diesel 14+ km/l on Motorway', 'Panoramic Roof', 'Smart Cruise Control', 'Blind Spot Monitor']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'kia',
+      model: 'Picanto AT 1.0',
+      year: 2024,
+      price: 4300000,
+      mileage: 7000,
+      fuelType: 'Petrol',
+      transmission: '4-Speed Automatic',
+      engine: '1.0L MPI',
+      horsepower: 69,
+      bodyType: 'Hatchback',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Clear White',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Compact Picanto automatic — ideal city car with big-car features. HAC, ESC and 6 airbags in a budget-friendly package.',
+      features: JSON.stringify(['6 Airbags', 'ESC & HAC', 'Push Start', 'Touchscreen with Reverse Camera']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'kia',
+      model: 'Stonic EX+ 1.0T',
+      year: 2024,
+      price: 6100000,
+      mileage: 9000,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.0L T-GDI Turbo',
+      horsepower: 120,
+      bodyType: 'Crossover',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Midnight Black',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Turbo Stonic EX+ crossover with sharp DCT gearbox and premium styling. Economical, easy to park, loaded with safety tech.',
+      features: JSON.stringify(['Turbo DCT Combo', 'LED DRLs', 'Apple CarPlay & Android Auto', 'Reverse Camera', 'Hill Start Assist']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'kia',
+      model: 'Carnival Limousine 11-Seater',
+      year: 2024,
+      price: 18200000,
+      mileage: 10000,
+      fuelType: 'Diesel',
+      transmission: '8-Speed Automatic',
+      engine: '2.2L Turbo Diesel',
+      horsepower: 202,
+      bodyType: 'Van',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Aurora Black Pearl',
+      interiorColor: 'Quartz Grey Leather',
+      driveType: 'FWD',
+      description: 'Limousine-spec Carnival — the executive people-mover. 11 seats, dual sunroofs and limousine lounge rear seating.',
+      features: JSON.stringify(['11-Seater', 'Dual Sunroofs', 'Ventilated Seats', 'Rear Lounge Mode', 'Smart Cruise', 'Around View Monitor']),
+      featured: false,
+      status: 'Reserved'
+    },
+
+    // ---------------- HYUNDAI ----------------
+    {
+      brandSlug: 'hyundai',
+      model: 'Tucson Ultimate AWD',
+      year: 2024,
+      price: 12400000,
+      mileage: 12000,
+      fuelType: 'Petrol',
+      transmission: '6-Speed Automatic',
+      engine: '2.0L MPI Nu',
+      horsepower: 156,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Phantom Black',
+      interiorColor: 'Black Leather',
+      driveType: 'AWD',
+      description: 'Ultimate trim Tucson with panoramic roof and powered tailgate — futuristic design with family-friendly comfort.',
+      features: JSON.stringify(['Panoramic Sunroof', 'Power Tailgate', 'Heated & Ventilated Seats', '10.25" Infotainment', 'Blind Spot View Monitor']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'hyundai',
+      model: 'Elantra GLS 1.6',
+      year: 2023,
+      price: 7900000,
+      mileage: 21000,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.6L Gamma',
+      horsepower: 123,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Polar White',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Parametric-dynamics Elantra GLS — bold looks, frugal 1.6L engine and smooth IVT. Complete authorised-service history.',
+      features: JSON.stringify(['Smart Cruise Control', 'Reverse Camera with Guidelines', 'Wireless CarPlay', 'LED Headlamps']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'hyundai',
+      model: 'Sonata Smart 2.5',
+      year: 2023,
+      price: 11200000,
+      mileage: 18000,
+      fuelType: 'Petrol',
+      transmission: '8-Speed Automatic',
+      engine: '2.5L Smartstream GDI',
+      horsepower: 180,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Hampton Grey',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: 'Flagship Sonata sedan with 2.5L direct injection and segment-best rear space. Executive transport at a family price.',
+      features: JSON.stringify(['Leather Seats', 'Power Driver Seat', 'Smart Cruise', 'Bose Sound', 'Sunroof']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'hyundai',
+      model: 'Santa Fe Smart 2.2D',
+      year: 2023,
+      price: 19300000,
+      mileage: 25000,
+      fuelType: 'Diesel',
+      transmission: '8-Speed Automatic',
+      engine: '2.2L Turbo Diesel',
+      horsepower: 200,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Titan Grey',
+      interiorColor: 'Beige Leather',
+      driveType: 'AWD',
+      description: '7-seater Santa Fe diesel AWD — quiet, efficient and capable. HTRAC all-wheel drive for Punjab winters and northern trips.',
+      features: JSON.stringify(['7-Seater', 'HTRAC AWD', 'Panoramic Roof', 'Ventilated Seats', '360 Camera']),
+      featured: false,
+      status: 'Sold'
+    },
+
+    // ---------------- CHANGAN ----------------
+    {
+      brandSlug: 'changan',
+      model: 'Alsvin 1.5 Top (DCT)',
+      year: 2024,
+      price: 5300000,
+      mileage: 8000,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.5L',
+      horsepower: 105,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Flare Red',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: 'Top-trim Alsvin with DCT and sunroof — feature-packed budget sedan with factory warranty remaining.',
+      features: JSON.stringify(['Sunroof', 'DCT Automatic', 'Leather Seats', 'Reverse Camera', 'Touchscreen with Navigation']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'changan',
+      model: 'Oshan X7 FutureSense',
+      year: 2024,
+      price: 9300000,
+      mileage: 11000,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.5L Turbo',
+      horsepower: 178,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Cosmic Grey',
+      interiorColor: 'Brown Leather',
+      driveType: 'FWD',
+      description: '7-seater Oshan X7 FutureSense — turbo DCT power with Level-2 ADAS at a Pakistani-friendly price.',
+      features: JSON.stringify(['7-Seater', 'FutureSense ADAS', 'Panoramic Sunroof', '360 Camera', 'Wireless Charging', 'Ambient Lighting']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'changan',
+      model: 'Karvaan Plus',
+      year: 2024,
+      price: 3600000,
+      mileage: 6000,
+      fuelType: 'Petrol',
+      transmission: '5-Speed Manual',
+      engine: '1.5L',
+      horsepower: 104,
+      bodyType: 'Van',
+      condition: 'Used',
+      exteriorColor: 'Solid White',
+      interiorColor: 'Grey Fabric',
+      driveType: 'RWD',
+      description: 'Spacious Karvaan Plus van for family and commercial duty — AC, power windows and strong 1.5L engine.',
+      features: JSON.stringify(['7-Seater', 'Dual AC', 'Power Windows', 'Keyless Entry']),
+      featured: false,
+      status: 'Available'
+    },
+
+    // ---------------- MG ----------------
+    {
+      brandSlug: 'mg',
+      model: 'MG HS 1.5T Excite',
+      year: 2024,
+      price: 8700000,
+      mileage: 9500,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.5L Turbo',
+      horsepower: 160,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Arctic White',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: 'MG HS turbo DCT — leather interior, panoramic sunroof and big-SUV presence at crossover money.',
+      features: JSON.stringify(['Leather Seats', 'Panoramic Sunroof', '6 Airbags', 'Reverse Camera', 'Cruise Control']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'mg',
+      model: 'MG ZS 1.5',
+      year: 2024,
+      price: 6950000,
+      mileage: 7800,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L SAIC',
+      horsepower: 118,
+      bodyType: 'Crossover',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Soho Red',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Compact ZS crossover — light steering, tall seating and easy maintenance. Popular with small families in Vehari.',
+      features: JSON.stringify(['Cruise Control', 'Reverse Camera', 'Touchscreen', 'Roof Rails', 'Hill Start Assist']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'mg',
+      model: 'MG ZS EV',
+      year: 2024,
+      price: 10500000,
+      mileage: 6000,
+      fuelType: 'Electric',
+      transmission: 'Single-Speed Automatic',
+      engine: '176.1 kWh Permanent Magnet Motor',
+      horsepower: 174,
+      bodyType: 'Crossover',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Stardust Blue',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: 'Electric ZS EV with 320 km range — silent running and one-tenth the running cost of petrol. Charger included.',
+      features: JSON.stringify(['320 km Range', 'Home Charger Included', 'Panoramic Roof', '360 Camera', 'ADAS Suite']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'mg',
+      model: 'MG GT 1.5T',
+      year: 2024,
+      price: 6400000,
+      mileage: 8500,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.5L Turbo',
+      horsepower: 148,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Flame Red',
+      interiorColor: 'Black Leather',
+      driveType: 'FWD',
+      description: 'Fastback-styled MG GT turbo — sporty sedan with leather seats and turbo punch for highway overtakes.',
+      features: JSON.stringify(['Turbo Engine', 'Leather Seats', '10.1" Touchscreen', 'Reverse Camera', 'Cruise Control']),
+      featured: false,
+      status: 'Available'
+    },
+
+    // ---------------- PROTON ----------------
+    {
+      brandSlug: 'proton',
+      model: 'Saga Ace 1.3 CVT',
+      year: 2024,
+      price: 5450000,
+      mileage: 9200,
+      fuelType: 'Petrol',
+      transmission: 'CVT Automatic',
+      engine: '1.3L VVT',
+      horsepower: 95,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Snow White',
+      interiorColor: 'Black Fabric',
+      driveType: 'FWD',
+      description: 'Value-packed Saga Ace sedan — spacious boot, 16+ km/l economy and solid Malaysian build.',
+      features: JSON.stringify(['Touchscreen with Reverse Camera', 'Cruise Control', '16" Alloys', 'Keyless Entry']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'proton',
+      model: 'X70 1.8T Premium',
+      year: 2024,
+      price: 9900000,
+      mileage: 12500,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '1.8L Turbo',
+      horsepower: 181,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Armour Silver',
+      interiorColor: 'Brown Nappa Leather',
+      driveType: 'AWD',
+      description: 'Premium X70 AWD turbo — Nappa leather, 360 camera and full ADAS suite at an attractive price point.',
+      features: JSON.stringify(['AWD', 'Nappa Leather', 'Panoramic Sunroof', '360 Camera', 'ADAS with Auto Braking']),
+      featured: false,
+      status: 'Available'
+    },
+
+    // ---------------- PEUGEOT (Signature Showcase) ----------------
+    {
+      brandSlug: 'peugeot',
+      model: '2008 Allure 1.2T',
+      year: 2025,
+      price: 12900000,
+      mileage: 1000,
+      fuelType: 'Petrol',
+      transmission: '6-Speed Automatic',
+      engine: '1.2L PureTech Turbo',
+      horsepower: 130,
+      bodyType: 'Crossover',
+      condition: 'Brand New',
+      exteriorColor: 'Perla Nera Black',
+      interiorColor: 'Black Mistral Leather',
+      driveType: 'FWD',
+      description: 'The Dream Cars signature showcase — 2025 Peugeot 2008 in Perla Nera Black. French premium design, i-Cockpit digital cluster, 130 HP PureTech turbo and full 2025 model styling. Registered 2025, flagship of our Vehari showroom.',
+      features: JSON.stringify(['2025 Model Year', 'Perla Nera Black', '3D i-Cockpit Digital Cluster', 'PureTech 130 Turbo', 'Wireless CarPlay & Android Auto', 'Park Assist with Rear Sensors', 'Half-Leather Mistral Seats', 'LED Vision Headlamps']),
       featured: true,
       status: 'Available',
       images: [
-        'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=1600&q=80'
+        '/cars/peugeot-2008-black-2025.jpg',
+        '/cars/peugeot-2008-black-2025-side.jpg'
       ]
     },
+
+    // ---------------- LUXURY / IMPORTED ----------------
     {
-      brandSlug: 'tesla',
-      model: 'Model S Plaid',
-      year: 2024,
-      price: 94000,
-      mileage: 2800,
-      fuelType: 'Electric',
-      transmission: 'Automatic (Single Speed)',
-      engine: 'Tri-Motor Electric All-Wheel Drive',
-      horsepower: 1020,
-      bodyType: 'Sedan',
-      condition: 'Pre-Owned Collector',
-      exteriorColor: 'Ultra Red Metallic',
-      interiorColor: 'All Black Premium Interior with Carbon Fiber Decor',
-      driveType: 'AWD',
-      description: '1,020 horsepower of instant electric torque delivering 0 to 60 mph in a physics-defying 1.99 seconds. Equipped with the Full Self-Driving computer, yoke steering option, 17-inch cinematic tilt touchscreen with 10 teraflops gaming capability, and adaptive tri-zone acoustic sound glass.',
-      features: JSON.stringify([
-        '1,020 Horsepower Tri-Motor AWD Architecture',
-        '0-60 MPH in 1.99 Seconds',
-        '17-inch Cinematic OLED Tilt Display',
-        'Full Self-Driving Capability (FSD Hardware 4.0)',
-        '22-Speaker 960W Audio with Active Noise Reduction',
-        'Heated and Ventilated Front Seats',
-        'Wireless Gaming Controller Support',
-        'Smart Air Suspension with GPS Location Memory'
-      ]),
-      featured: false,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1536700503339-1e4b06520771?auto=format&fit=crop&w=1600&q=80'
-      ]
-    },
-    {
-      brandSlug: 'porsche',
-      model: 'Cayenne Turbo GT',
-      year: 2024,
-      price: 198500,
-      mileage: 3100,
+      brandSlug: 'bmw',
+      model: '530i M Sport (5 Series)',
+      year: 2023,
+      price: 31900000,
+      mileage: 22000,
       fuelType: 'Petrol',
-      transmission: 'Automatic (8-Speed Tiptronic S)',
-      engine: '4.0L Twin-Turbocharged V8',
-      horsepower: 650,
-      bodyType: 'SUV',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Arctic Grey',
-      interiorColor: 'Turbo GT Black Leather and Alcantara with Neodyme Accent',
-      driveType: 'AWD (Porsche Traction Management)',
-      description: 'The supreme SUV track conqueror. Equipped with a central titanium sports exhaust system with dual blue heat-treated tips, carbon ceramic brakes (PCCB), carbon fiber roof, and rear active aero spoiler with 25mm carbon gurney flap.',
-      features: JSON.stringify([
-        'Central Titanium Sports Exhaust System',
-        'Porsche Ceramic Composite Brakes (PCCB) in Yellow',
-        'Carbon Fiber Roof and Rear Diffuser',
-        'Active Aerodynamic Carbon Rear Spoiler',
-        'Porsche Dynamic Chassis Control (PDCC)',
-        'Rear Axle Steering with Power Steering Plus',
-        'Burmester 3D High-End Surround Sound',
-        'Matrix LED Headlights with Porsche Dynamic Light System'
-      ]),
+      transmission: '8-Speed Automatic',
+      engine: '2.0L TwinPower Turbo',
+      horsepower: 248,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Carbon Black Metallic',
+      interiorColor: 'Cognac Vernasca Leather',
+      driveType: 'RWD',
+      description: 'G30 530i M Sport — the executive benchmark. BMW Live Cockpit, adaptive suspension and authorised-service history.',
+      features: JSON.stringify(['M Sport Package', 'Live Cockpit Professional', 'Adaptive LED Headlights', 'Ambient Air Package', 'Reverse Camera + Parking Assistant']),
       featured: false,
-      status: 'Reserved',
-      images: [
-        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1600&q=80'
-      ]
+      status: 'Available'
     },
     {
       brandSlug: 'bmw',
-      model: 'X7 M60i xDrive',
+      model: 'X5 xDrive40i',
       year: 2024,
-      price: 114000,
-      mileage: 4900,
-      fuelType: 'Hybrid',
-      transmission: 'Automatic (8-Speed Sport Steptronic)',
-      engine: '4.4L BMW M TwinPower Turbo V8 + 48V Mild Hybrid',
-      horsepower: 523,
+      price: 52500000,
+      mileage: 12000,
+      fuelType: 'Petrol',
+      transmission: '8-Speed Automatic',
+      engine: '3.0L TwinPower Turbo I6',
+      horsepower: 375,
       bodyType: 'SUV',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Frozen Pure Grey Metallic',
-      interiorColor: 'Tartufo Full Merino Leather',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Arctic Grey Brilliant',
+      interiorColor: 'Black Merino Leather',
       driveType: 'AWD',
-      description: 'The commanding flagship luxury SAV. Offering three rows of opulent captain chair seating, illuminated Iconic Glow kidney grille, Bowers & Wilkins 20-speaker sound, Sky Lounge panoramic glass roof with embedded LED fiber optics, and executive drive pro active suspension.',
-      features: JSON.stringify([
-        'Sky Lounge Panoramic LED Star Roof',
-        'Illuminated Iconic Glow Kidney Grille',
-        'Bowers & Wilkins Diamond Surround Audio',
-        'Six-Seat Configuration with 2nd Row Captain Chairs',
-        'Soft-Close Automatic Doors & Acoustic Glass',
-        'Executive Drive Pro Active Roll Stabilization',
-        'BMW Curved Display with Operating System 8.5',
-        'Heated, Ventilated & Massaging Seats'
-      ]),
+      description: 'G05 X5 40i with B58 turbo inline-six — Panoramic roof, M Sport Pro package and air suspension. Flagship luxury SUV.',
+      features: JSON.stringify(['Panoramic Roof', 'M Sport Pro Package', 'Harman Kardon Audio', 'Air Suspension', 'Gesture Control', 'Wireless Charging']),
+      featured: true,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'mercedes-benz',
+      model: 'C 180 AMG Line',
+      year: 2023,
+      price: 34500000,
+      mileage: 19000,
+      fuelType: 'Petrol',
+      transmission: '9-Speed Automatic',
+      engine: '1.5L Turbo with EQ Boost',
+      horsepower: 168,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Obsidian Black',
+      interiorColor: 'Black ARTICO Leather',
+      driveType: 'RWD',
+      description: 'W206 C-Class AMG Line — the baby S-Class with MBUX superscreen feel, EQ Boost mild hybrid and AMG styling.',
+      features: JSON.stringify(['AMG Line Exterior & Interior', 'MBUX with NATURAL VOICE', 'EQ Boost Mild Hybrid', 'Ambient Lighting 64 Colors', '360 Camera']),
       featured: false,
-      status: 'Sold',
-      images: [
-        'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1600&q=80'
-      ]
+      status: 'Available'
+    },
+    {
+      brandSlug: 'mercedes-benz',
+      model: 'E 200 AMG Line',
+      year: 2023,
+      price: 47900000,
+      mileage: 16000,
+      fuelType: 'Petrol',
+      transmission: '9-Speed Automatic',
+      engine: '2.0L Turbo with EQ Boost',
+      horsepower: 197,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Selenite Grey',
+      interiorColor: 'Macchiato Beige Nappa',
+      driveType: 'RWD',
+      description: 'W214 E-Class with the full-width MBUX Superscreen — chauffeur-grade rear comfort with executive package.',
+      features: JSON.stringify(['MBUX Superscreen', 'Burmester 4D Sound', 'Rear-Axle Steering', 'Energizing Air Control', 'Digital Light']),
+      featured: false,
+      status: 'Reserved'
+    },
+    {
+      brandSlug: 'audi',
+      model: 'A6 45 TFSI Quattro',
+      year: 2023,
+      price: 42500000,
+      mileage: 21000,
+      fuelType: 'Petrol',
+      transmission: '7-Speed Dual-Clutch (DCT)',
+      engine: '2.0L TFSI Turbo',
+      horsepower: 261,
+      bodyType: 'Sedan',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Daytona Grey Pearl',
+      interiorColor: 'Black Valcona Leather',
+      driveType: 'AWD',
+      description: 'C8 A6 45 TFSI Quattro — understated executive sport with matrix LED, virtual cockpit and all-wheel grip.',
+      features: JSON.stringify(['Quattro AWD', 'Virtual Cockpit Plus', 'Matrix LED Headlights', 'Bang & Olufsen 3D', 'Air Suspension']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'porsche',
+      model: 'Cayenne Platinum Edition',
+      year: 2023,
+      price: 64000000,
+      mileage: 14000,
+      fuelType: 'Petrol',
+      transmission: '8-Speed Automatic',
+      engine: '3.0L Turbo V6',
+      horsepower: 335,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Carrara White Metallic',
+      interiorColor: 'Black/Bordeaux Leather',
+      driveType: 'AWD',
+      description: 'Cayenne Platinum Edition — the sports car of SUVs. Air suspension, Bose surround and Porsche traction management.',
+      features: JSON.stringify(['Air Suspension', 'PASM Sport', 'Bose Surround Sound', 'Power Steering Plus', 'Panoramic Roof']),
+      featured: false,
+      status: 'Available'
+    },
+    {
+      brandSlug: 'land-rover',
+      model: 'Range Rover Sport HSE P360',
+      year: 2023,
+      price: 74500000,
+      mileage: 15000,
+      fuelType: 'Petrol',
+      transmission: '8-Speed Automatic',
+      engine: '3.0L Turbo I6 Mild Hybrid',
+      horsepower: 355,
+      bodyType: 'SUV',
+      condition: 'Certified Pre-Owned',
+      exteriorColor: 'Santorini Black',
+      interiorColor: 'Ebony Windsor Leather',
+      driveType: 'AWD',
+      description: 'New-gen Range Rover Sport HSE — commanding presence, cabin of a private jet and effortless straight-six pace.',
+      features: JSON.stringify(['Meridian Sound', 'Electronic Air Suspension', 'Cabin Air Purification', 'Head-Up Display', 'ClearSight Ground View']),
+      featured: false,
+      status: 'Available'
     },
     {
       brandSlug: 'lexus',
-      model: 'LX 600 Ultra Luxury VIP',
-      year: 2024,
-      price: 136000,
-      mileage: 2400,
+      model: 'LX 570 (Imported)',
+      year: 2022,
+      price: 67500000,
+      mileage: 32000,
       fuelType: 'Petrol',
-      transmission: 'Automatic (10-Speed Direct-Shift)',
-      engine: '3.4L Twin-Turbo V6',
-      horsepower: 409,
+      transmission: '8-Speed Automatic',
+      engine: '5.7L V8',
+      horsepower: 362,
       bodyType: 'SUV',
-      condition: 'Certified Luxury',
-      exteriorColor: 'Eminent White Pearl',
-      interiorColor: 'Sunflare Semi-Aniline Diamond-Stitched Leather',
-      driveType: 'AWD',
-      description: 'First-class luxury travel redefined. The four-seat Ultra Luxury specification boasts independent rear Ottoman VIP seating with 48-degree recline, private rear touchscreen control panel, overhead air conditioning shower vents, and Mark Levinson 25-speaker 3D Reference sound.',
-      features: JSON.stringify([
-        'Ultra Luxury 4-Seat VIP Lounge with Rear Ottoman Recliner',
-        'Mark Levinson 25-Speaker 2,400-Watt Reference Audio',
-        'Active Height Control (AHC) Hydraulic Suspension',
-        'Private Rear Command Touchscreen Console',
-        'Artisan Japanese Wood Trim Inlays',
-        'Dual 11.4-inch Rear Entertainment Touchscreens',
-        'Center Console Refrigerator Cool Box',
-        'Lexus Safety System+ 2.5 with Dynamic Radar'
-      ]),
+      condition: 'Japanese Imported',
+      exteriorColor: 'Sonic Titanium',
+      interiorColor: 'Black Semi-Aniline Leather',
+      driveType: '4WD',
+      description: 'Imported LX 570 V8 — the majesty of Pakistani roads. Mark Levinson audio, rear entertainment and unstoppable 5.7L V8.',
+      features: JSON.stringify(['Auction Sheet Verified', 'Mark Levinson 19-Speaker Audio', 'Rear Entertainment', 'Cool Box', 'Multi-Terrain Select', 'Head-Up Display']),
       featured: false,
-      status: 'Available',
-      images: [
-        'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1600&q=80',
-        'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?auto=format&fit=crop&w=1600&q=80'
-      ]
+      status: 'Available'
     }
   ];
 
+  let carCount = 0;
   for (const c of carsData) {
     const brandId = brandMap[c.brandSlug];
     if (!brandId) continue;
 
-    // create or find car
-    const existing = await prisma.car.findFirst({
-      where: {
+    const createdCar = await prisma.car.create({
+      data: {
         brandId,
         model: c.model,
-        year: c.year
+        year: c.year,
+        price: c.price,
+        mileage: c.mileage,
+        fuelType: c.fuelType,
+        transmission: c.transmission,
+        engine: c.engine,
+        horsepower: c.horsepower,
+        bodyType: c.bodyType,
+        condition: c.condition,
+        exteriorColor: c.exteriorColor,
+        interiorColor: c.interiorColor,
+        driveType: c.driveType,
+        description: c.description,
+        features: c.features,
+        featured: c.featured,
+        status: c.status
       }
     });
+    carCount++;
 
-    if (existing) {
-      await prisma.car.update({
-        where: { id: existing.id },
-        data: {
-          price: c.price,
-          mileage: c.mileage,
-          fuelType: c.fuelType,
-          transmission: c.transmission,
-          engine: c.engine,
-          horsepower: c.horsepower,
-          bodyType: c.bodyType,
-          condition: c.condition,
-          exteriorColor: c.exteriorColor,
-          interiorColor: c.interiorColor,
-          driveType: c.driveType,
-          description: c.description,
-          features: c.features,
-          featured: c.featured,
-          status: c.status
-        }
-      });
-    } else {
-      const createdCar = await prisma.car.create({
-        data: {
-          brandId,
-          model: c.model,
-          year: c.year,
-          price: c.price,
-          mileage: c.mileage,
-          fuelType: c.fuelType,
-          transmission: c.transmission,
-          engine: c.engine,
-          horsepower: c.horsepower,
-          bodyType: c.bodyType,
-          condition: c.condition,
-          exteriorColor: c.exteriorColor,
-          interiorColor: c.interiorColor,
-          driveType: c.driveType,
-          description: c.description,
-          features: c.features,
-          featured: c.featured,
-          status: c.status
-        }
-      });
-
-      // Insert images
+    // Insert images when provided (owner uploads the rest via admin panel)
+    if (c.images && c.images.length > 0) {
       for (let i = 0; i < c.images.length; i++) {
         await prisma.carImage.create({
           data: {
@@ -596,55 +1056,55 @@ async function main() {
       }
     }
   }
+  console.log(`--- ${carCount} vehicles seeded ---`);
 
-  // 5. Sample Inquiries
-  const sampleCar = await prisma.car.findFirst();
+  // 5. Sample Pakistani inquiries
+  const corolla = await prisma.car.findFirst({ where: { model: { contains: 'Corolla' } } });
+  const civic = await prisma.car.findFirst({ where: { model: { contains: 'Civic' } } });
   const inquiries = [
     {
-      name: 'Hamza Khan',
-      phone: '03214567890',
-      email: 'hamza.khan@gmail.com',
-      carId: sampleCar ? sampleCar.id : null,
-      subject: 'Inquiry regarding inspection & test drive',
-      message: 'Hello Dream Cars, I am interested in viewing the BMW M5 Competition. Is it available for private showroom viewing this Saturday afternoon?',
+      name: 'Ali Raza',
+      phone: '03001234567',
+      email: 'ali.raza@gmail.com',
+      carId: corolla ? corolla.id : null,
+      subject: 'Test drive request - Corolla Grande',
+      message: 'Assalam o Alaikum, I am interested in the Corolla Altis Grande. Can I visit the Vehari showroom this Saturday for a test drive and inspection?',
       status: 'New',
       inquiryType: 'Car Inquiry'
     },
     {
-      name: 'Malik Tariq',
-      phone: '03001234567',
-      email: 'malik.tariq@investments.pk',
-      carId: null,
-      subject: 'Trade-in evaluation for 2021 Porsche Panamera',
-      message: 'Looking to upgrade to the Land Cruiser 300 or Range Rover SV. My current car is a 2021 Porsche Panamera GTS with 18,000 km.',
+      name: 'Fatima Noor',
+      phone: '03219876543',
+      email: 'fatima.noor@hotmail.com',
+      carId: civic ? civic.id : null,
+      subject: 'Trade-in evaluation for Suzuki Cultus 2021',
+      message: 'I want to upgrade to the Honda Civic RS. My current car is a 2021 Suzuki Cultus VXL with 40,000 km. What trade-in value can Dream Cars offer?',
       status: 'Contacted',
       inquiryType: 'Trade-In',
       tradeInDetails: JSON.stringify({
-        currentCar: 'Porsche Panamera GTS',
+        currentCar: 'Suzuki Cultus VXL 2021',
         year: 2021,
-        mileage: 18000,
-        estimatedValue: 120000
+        mileage: 40000,
+        estimatedValue: 3200000
       })
     },
     {
-      name: 'Zainab Ahmed',
-      phone: '03339876543',
-      email: 'zainab.ahmed@luxuryhomes.com',
+      name: 'Usman Ghani',
+      phone: '03335551234',
+      email: 'usman.ghani@outlook.com',
       carId: null,
-      subject: 'Custom S-Class Maybach order',
-      message: 'Greetings, I would like to schedule a consultation with your private sales concierge regarding delivery timelines for custom luxury orders.',
+      subject: 'Japanese imported Vezel availability',
+      message: 'Do you have fresh auction-sheet-verified Japanese imports in stock this month? Looking for a Vezel or Cross Hybrid under PKR 10 million.',
       status: 'New',
       inquiryType: 'General'
     }
   ];
 
   for (const inq of inquiries) {
-    await prisma.inquiry.create({
-      data: inq
-    });
+    await prisma.inquiry.create({ data: inq });
   }
 
-  console.log('--- Dream Cars Database Seeded Successfully! ---');
+  console.log('--- Dream Cars (Vehari) Database Seeded Successfully! ---');
 }
 
 main()

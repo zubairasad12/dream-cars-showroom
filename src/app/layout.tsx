@@ -5,19 +5,20 @@ import Footer from '@/components/Footer';
 import WhatsAppFloating from '@/components/WhatsAppFloating';
 
 export const metadata: Metadata = {
-  title: 'Dream Cars | Exclusive Luxury Car Showroom & Exotic Dealership',
-  description: 'Explore Dream Cars - Pakistan’s premier luxury and exotic automobile showroom. Discover handpicked BMW, Mercedes-AMG, Porsche, Audi, Range Rover, and Japanese engineering with certified inspections.',
+  title: 'Dream Cars | Premium Cars for Sale in Vehari, Pakistan',
+  description: 'Browse verified new, used, and Japanese imported cars for sale in Vehari, Punjab, Pakistan at Dream Cars. Certified 150-point inspection and transparent PKR pricing.',
   keywords: [
     'Dream Cars',
-    'Luxury Cars Showroom',
-    'Exotic Cars Pakistan',
-    'Porsche 911',
-    'BMW M5 Competition',
-    'Mercedes AMG GT',
-    'Land Cruiser 300',
-    'Luxury Car Dealership Lahore',
-    'Gulberg Car Showroom',
-    'Sports Cars'
+    'Cars for Sale in Vehari',
+    'Cars for Sale in Pakistan',
+    'Vehari Car Showroom',
+    'Used Cars Vehari',
+    'New Cars Pakistan',
+    'Japanese Imported Cars Pakistan',
+    'Toyota Corolla Pakistan',
+    'Honda Civic Pakistan',
+    'Suzuki Alto Pakistan',
+    'Peugeot 2008 Pakistan'
   ],
   authors: [{ name: 'Dream Cars Luxury Motors' }],
   creator: 'Dream Cars',
@@ -63,19 +64,17 @@ export default function RootLayout({
     '@id': 'https://dreamcars.com',
     url: 'https://dreamcars.com',
     telephone: '+923099491835',
-    priceRange: '$$$$',
+    priceRange: 'PKR 2,300,000 - PKR 85,000,000',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Main Boulevard, Gulberg III',
-      addressLocality: 'Lahore',
+      addressLocality: 'Vehari',
       addressRegion: 'Punjab',
-      postalCode: '54000',
       addressCountry: 'PK',
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 31.5204,
-      longitude: 74.3587,
+      latitude: 30.0452,
+      longitude: 72.3489,
     },
     openingHoursSpecification: [
       {
@@ -95,7 +94,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#08090C] text-slate-100 min-h-screen flex flex-col selection:bg-rose-600 selection:text-white antialiased">
+      <body className="bg-[#0B0B0A] text-[#F4F2ED] min-h-screen flex flex-col selection:bg-[#C8A96B] selection:text-[#0B0B0A] antialiased">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

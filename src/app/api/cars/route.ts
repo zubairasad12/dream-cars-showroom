@@ -155,6 +155,7 @@ export async function POST(req: NextRequest) {
       featured,
       status,
       images,
+      videos,
     } = body;
 
     if (!brandId || !model || !year || !price) {
@@ -202,9 +203,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (Array.isArray(videos) && videos.length > 0) {
+      await Promise.all(
+        videos.map((vid: any, index: number) =>
+          prisma.carVideo.create({
+            data: {
+              carId: car.id,
+              videoUrl: typeof vid === 'string' ? vid : vid.videoUrl,
+              sortOrder: typeof vid === 'object' && vid.sortOrder !== undefined ? vid.sortOrder : index,
+            },
+          })
+        )
+      );
+    }
+
     const fullCar = await prisma.car.findUnique({
       where: { id: car.id },
-      include: { brand: true, images: true },
+      include: { brand: true, images: true, videos: true },
     });
 
     return NextResponse.json({ success: true, car: fullCar }, { status: 201 });

@@ -18,23 +18,23 @@ export default function BrandCarousel() {
   }, []);
 
   return (
-    <section className="py-20 bg-[#060709] border-t border-b border-white/5 relative">
+    <section className="py-20 bg-[#151514] border-t border-b border-[#30302D] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
-            <span className="text-xs font-bold text-rose-500 uppercase tracking-widest block mb-1">
+            <span className="text-xs font-bold text-[#C8A96B] uppercase tracking-widest block mb-1">
               WORLD-CLASS ENGINEERING
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Prestige Automotive <span className="text-slate-400 font-light">Marques</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#F4F2ED] tracking-tight">
+              Prestige Automotive <span className="text-[#C8A96B] font-light">Marques</span>
             </h2>
           </div>
 
           <Link
             href="/brands"
-            className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-white uppercase tracking-wider transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#C8A96B] hover:text-[#D8C08A] uppercase tracking-wider transition-colors"
           >
             <span>All Showroom Brands</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -47,20 +47,20 @@ export default function BrandCarousel() {
             <Link
               key={brand.id}
               href={`/brands/${brand.slug}`}
-              className="group relative p-6 rounded-2xl bg-[#0D0F14] border border-white/5 hover:border-rose-500/40 hover:bg-[#131620] transition-all duration-300 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-950/20"
+              className="group relative p-6 rounded-2xl bg-[#1D1C19] border border-[#30302D] hover:border-[#C8A96B] hover:bg-[#242320] transition-all duration-300 flex flex-col items-center text-center hover:-translate-y-1 shadow-md hover:shadow-black/50"
             >
               {/* Brand Name */}
-              <h3 className="text-base font-extrabold text-white group-hover:text-rose-400 transition-colors tracking-wide">
+              <h3 className="text-base font-extrabold text-[#F4F2ED] group-hover:text-[#D8C08A] transition-colors tracking-wide">
                 {brand.name}
               </h3>
 
               {/* Cars count */}
-              <span className="text-[11px] text-slate-500 group-hover:text-slate-300 transition-colors mt-1 font-medium">
+              <span className="text-[11px] text-[#A6A39C] group-hover:text-[#F4F2ED] transition-colors mt-1 font-medium">
                 {brand._count?.cars ? `${brand._count.cars} Vehicles Available` : 'Available in Gallery'}
               </span>
 
               {/* Hover indicator */}
-              <div className="mt-3 flex items-center gap-1 text-[10px] text-rose-500 font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-3 flex items-center gap-1 text-[10px] text-[#C8A96B] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                 <span>View Models</span>
                 <ArrowUpRight className="w-3 h-3" />
               </div>

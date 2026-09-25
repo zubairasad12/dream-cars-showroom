@@ -11,11 +11,6 @@ import {
   Inbox, 
   CheckCircle, 
   PlusCircle, 
-  ArrowRight, 
-  Clock, 
-  Phone, 
-  Mail,
-  DollarSign
 } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 
@@ -69,31 +64,31 @@ export default async function AdminDashboardPage() {
   ]);
 
   const cards = [
-    { label: 'Total Showroom Cars', value: totalCars, icon: Car, color: 'text-white', bg: 'bg-white/5' },
-    { label: 'Featured Vehicles', value: featuredCars, icon: Sparkles, color: 'text-rose-500', bg: 'bg-rose-600/10' },
+    { label: 'Total Showroom Cars', value: totalCars, icon: Car, color: 'text-[#F4F2ED]', bg: 'bg-white/5' },
+    { label: 'Featured Vehicles', value: featuredCars, icon: Sparkles, color: 'text-[#C8A96B]', bg: 'bg-[#C8A96B]/10' },
     { label: 'Sold Cars', value: soldCars, icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
     { label: 'Active Brands', value: totalBrands, icon: Tag, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { label: 'New Client Inquiries', value: newInquiries, icon: Inbox, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+    { label: 'New Client Inquiries', value: newInquiries, icon: Inbox, color: 'text-[#C8A96B]', bg: 'bg-[#C8A96B]/10' },
   ];
 
   return (
     <div className="space-y-10">
       
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#30302D]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
             Showroom Overview
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Welcome back, <span className="text-white font-semibold">{admin.name}</span>. Here is your inventory performance and incoming client inquiries.
+          <p className="text-xs sm:text-sm text-[#A6A39C] mt-1">
+            Welcome back, <span className="text-[#F4F2ED] font-semibold">{admin.name}</span>. Here is your inventory performance and incoming client inquiries.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Link
             href="/admin/cars/new"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/50"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Add Vehicle</span>
@@ -108,10 +103,10 @@ export default async function AdminDashboardPage() {
           return (
             <div
               key={i}
-              className="p-5 rounded-2xl bg-[#111319] border border-white/10 space-y-3"
+              className="p-5 rounded-2xl bg-[#1D1C19] border border-[#30302D] space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider">
                   {c.label}
                 </span>
                 <div className={`p-2 rounded-xl ${c.bg}`}>
@@ -130,37 +125,37 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left Column: Recent Inquiries */}
-        <div className="lg:col-span-6 bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10">
+        <div className="lg:col-span-6 bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <div className="flex items-center justify-between pb-4 border-b border-[#30302D]">
             <div className="flex items-center gap-2">
-              <Inbox className="w-5 h-5 text-amber-400" />
-              <h2 className="text-base font-bold text-white uppercase tracking-wider">
+              <Inbox className="w-5 h-5 text-[#C8A96B]" />
+              <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider">
                 Recent Inquiries & Leads
               </h2>
             </div>
             <Link
               href="/admin/inquiries"
-              className="text-xs text-rose-400 hover:text-white transition-colors font-semibold"
+              className="text-xs text-[#C8A96B] hover:text-[#D8C08A] transition-colors font-semibold"
             >
               View All Inquiries →
             </Link>
           </div>
 
           {recentInquiries.length === 0 ? (
-            <p className="text-xs text-slate-500 py-6 text-center">No inquiries received yet.</p>
+            <p className="text-xs text-[#A6A39C] py-6 text-center">No inquiries received yet.</p>
           ) : (
             <div className="space-y-3">
               {recentInquiries.map((inq) => (
                 <div
                   key={inq.id}
-                  className="p-4 rounded-2xl bg-[#161922] border border-white/5 space-y-2 hover:border-white/15 transition-colors"
+                  className="p-4 rounded-2xl bg-[#151514] border border-[#30302D] space-y-2 hover:border-[#C8A96B]/30 transition-colors"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-white">{inq.name}</span>
+                    <span className="text-sm font-bold text-[#F4F2ED]">{inq.name}</span>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                         inq.status === 'New'
-                          ? 'bg-rose-950/80 text-rose-400 border border-rose-500/30'
+                          ? 'bg-[#C8A96B]/15 text-[#C8A96B] border border-[#C8A96B]/30'
                           : inq.status === 'Contacted'
                           ? 'bg-amber-950/80 text-amber-300 border border-amber-500/30'
                           : 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30'
@@ -170,14 +165,14 @@ export default async function AdminDashboardPage() {
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 line-clamp-1 font-medium">
+                  <p className="text-xs text-[#A6A39C] line-clamp-1 font-medium">
                     {inq.subject}
                   </p>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 pt-1 border-t border-white/5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#A6A39C] pt-1 border-t border-[#30302D]">
                     <span>{inq.phone} • {inq.email}</span>
                     {inq.car && (
-                      <span className="text-rose-400 font-semibold truncate">
+                      <span className="text-[#C8A96B] font-semibold truncate">
                         Car: {inq.car.brand.name} {inq.car.model}
                       </span>
                     )}
@@ -189,17 +184,17 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Right Column: Recent Vehicles */}
-        <div className="lg:col-span-6 bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10">
+        <div className="lg:col-span-6 bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <div className="flex items-center justify-between pb-4 border-b border-[#30302D]">
             <div className="flex items-center gap-2">
-              <Car className="w-5 h-5 text-rose-500" />
-              <h2 className="text-base font-bold text-white uppercase tracking-wider">
+              <Car className="w-5 h-5 text-[#C8A96B]" />
+              <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider">
                 Recent Showroom Vehicles
               </h2>
             </div>
             <Link
               href="/admin/cars"
-              className="text-xs text-rose-400 hover:text-white transition-colors font-semibold"
+              className="text-xs text-[#C8A96B] hover:text-[#D8C08A] transition-colors font-semibold"
             >
               Manage All Cars →
             </Link>
@@ -211,7 +206,7 @@ export default async function AdminDashboardPage() {
               return (
                 <div
                   key={c.id}
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-[#161922] border border-white/5 hover:border-white/15 transition-colors gap-3"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-[#151514] border border-[#30302D] hover:border-[#C8A96B]/30 transition-colors gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 shrink-0 relative">
@@ -223,13 +218,13 @@ export default async function AdminDashboardPage() {
                       />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-rose-500 uppercase tracking-wider truncate">
+                      <p className="text-xs font-bold text-[#C8A96B] uppercase tracking-wider truncate">
                         {c.brand?.name}
                       </p>
-                      <h4 className="text-sm font-bold text-white truncate">
+                      <h4 className="text-sm font-bold text-[#F4F2ED] truncate">
                         {c.model} ({c.year})
                       </h4>
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-xs text-[#C8A96B] font-medium">
                         {formatPrice(c.price)}
                       </span>
                     </div>
@@ -250,7 +245,7 @@ export default async function AdminDashboardPage() {
 
                     <Link
                       href={`/admin/cars/${c.id}/edit`}
-                      className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-rose-600 text-white text-[11px] font-semibold transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-[#30302D] hover:bg-[#C8A96B] hover:text-[#0B0B0A] text-[#F4F2ED] text-[11px] font-semibold transition-colors"
                     >
                       Edit
                     </Link>

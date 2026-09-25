@@ -4,19 +4,18 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Car, 
-  PlusCircle, 
-  BadgePercent, 
-  Inbox, 
-  Settings, 
-  ExternalLink, 
-  LogOut, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Car,
+  PlusCircle,
+  Inbox,
+  Settings,
+  ExternalLink,
+  LogOut,
+  Menu,
   X,
-  ShieldCheck,
-  Tag
+  Tag,
+  BookOpen
 } from 'lucide-react';
 
 interface Props {
@@ -48,18 +47,19 @@ export default function AdminLayout({ children }: Props) {
     { label: 'Vehicles', href: '/admin/cars', icon: Car },
     { label: 'Add Vehicle', href: '/admin/cars/new', icon: PlusCircle },
     { label: 'Brands & Marques', href: '/admin/brands', icon: Tag },
+    { label: 'Blog & Journal', href: '/admin/blog', icon: BookOpen },
     { label: 'Inquiries & Leads', href: '/admin/inquiries', icon: Inbox },
     { label: 'Showroom Settings', href: '/admin/settings', icon: Settings },
   ];
 
   return (
-    <div className="min-h-screen bg-[#08090C] text-slate-100 flex">
+    <div className="min-h-screen bg-[#0B0B0A] text-[#F4F2ED] flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-[#0E1017] border-r border-white/10 shrink-0">
+      <aside className="hidden lg:flex flex-col w-64 bg-[#151514] border-r border-[#30302D] shrink-0">
         
         {/* Brand header */}
-        <div className="p-6 border-b border-white/10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 p-0.5 bg-[#161922]">
+        <div className="p-6 border-b border-[#30302D] flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full overflow-hidden border border-[#C8A96B]/30 p-0.5 bg-[#1D1C19]">
             <Image
               src="/logo.png"
               alt="Dream Cars"
@@ -69,10 +69,10 @@ export default function AdminLayout({ children }: Props) {
             />
           </div>
           <div>
-            <span className="font-extrabold text-sm text-white tracking-wider flex items-center">
-              <span className="text-rose-500">D</span>REAM CARS
+            <span className="font-extrabold text-sm text-[#F4F2ED] tracking-wider flex items-center">
+              <span className="text-[#C8A96B]">D</span>REAM CARS
             </span>
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest block">
+            <span className="text-[10px] uppercase font-bold text-[#A6A39C] tracking-widest block">
               Admin Suite
             </span>
           </div>
@@ -89,8 +89,8 @@ export default function AdminLayout({ children }: Props) {
                 href={item.href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
                   isActive
-                    ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/50'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#C8A96B] text-[#0B0B0A] font-bold shadow-lg shadow-[#C8A96B]/15'
+                    : 'text-[#A6A39C] hover:text-[#F4F2ED] hover:bg-[#1D1C19]'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -101,17 +101,17 @@ export default function AdminLayout({ children }: Props) {
         </nav>
 
         {/* Footer actions */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="p-4 border-t border-[#30302D] space-y-2">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+            className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-[#A6A39C] hover:text-[#F4F2ED] hover:bg-[#1D1C19] transition-colors"
           >
             <span className="flex items-center gap-2">
-              <ExternalLink className="w-4 h-4 text-emerald-400" />
+              <ExternalLink className="w-4 h-4 text-[#C8A96B]" />
               <span>Live Showroom</span>
             </span>
-            <span className="text-[10px] text-slate-500">↗</span>
+            <span className="text-[10px] text-stone-500">↗</span>
           </Link>
 
           <button
@@ -129,38 +129,38 @@ export default function AdminLayout({ children }: Props) {
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Top Header */}
-        <header className="h-16 bg-[#0E1017]/80 backdrop-blur-md border-b border-white/10 px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 bg-[#151514]/90 backdrop-blur-md border-b border-[#30302D] px-6 flex items-center justify-between sticky top-0 z-30 animate-slideDown">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+              className="lg:hidden p-2 rounded-lg text-[#A6A39C] hover:text-[#F4F2ED] hover:bg-[#1D1C19]"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider hidden sm:block">
+            <h2 className="text-sm font-bold text-[#F4F2ED] uppercase tracking-wider hidden sm:block">
               Showroom Control Center
             </h2>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1D1C19] border border-[#30302D] text-xs">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-slate-300 font-medium">Showroom Director</span>
+              <span className="text-[#A6A39C] font-medium">Showroom Director</span>
             </div>
 
             <Link
               href="/"
               target="_blank"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1D1C19] hover:bg-[#30302D] text-xs font-semibold text-[#F4F2ED] transition-colors"
             >
               <span>Live Website</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#C8A96B]" />
             </Link>
           </div>
         </header>
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-y-auto">
+        {/* Dynamic Page Content — re-animates on every page navigation */}
+        <main key={pathname} className="flex-1 p-6 sm:p-8 lg:p-10 overflow-y-auto bg-[#0B0B0A] animate-fadeUp">
           {children}
         </main>
 
@@ -169,12 +169,12 @@ export default function AdminLayout({ children }: Props) {
       {/* Mobile Sidebar Drawer */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden flex">
-          <div className="w-64 bg-[#0E1017] h-full flex flex-col border-r border-white/10 p-6 animate-fadeIn">
-            <div className="flex items-center justify-between pb-6 border-b border-white/10">
-              <span className="font-bold text-white text-sm">Menu</span>
+          <div className="w-64 bg-[#151514] h-full flex flex-col border-r border-[#30302D] p-6 animate-fadeIn">
+            <div className="flex items-center justify-between pb-6 border-b border-[#30302D]">
+              <span className="font-bold text-[#F4F2ED] text-sm">Menu</span>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-white"
+                className="p-1.5 text-[#A6A39C] hover:text-[#F4F2ED]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -189,7 +189,7 @@ export default function AdminLayout({ children }: Props) {
                     href={item.href}
                     onClick={() => setMobileSidebarOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold ${
-                      pathname === item.href ? 'bg-rose-600 text-white' : 'text-slate-300'
+                      pathname === item.href ? 'bg-[#C8A96B] text-[#0B0B0A] font-bold' : 'text-[#A6A39C]'
                     }`}
                   >
                     <Icon className="w-4 h-4" />

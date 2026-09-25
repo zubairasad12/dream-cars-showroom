@@ -3,15 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { 
-  Settings, 
   Save, 
   CheckCircle, 
   AlertCircle, 
   Phone, 
-  MessageCircle, 
-  MapPin, 
-  Clock, 
-  Mail, 
   Globe 
 } from 'lucide-react';
 import { ShowroomSettings } from '@/lib/types';
@@ -28,7 +23,7 @@ export default function AdminSettingsPage() {
     phone: '03099491835',
     whatsapp: '923099491835',
     email: 'contact@dreamcars.com',
-    address: 'Dream Cars Luxury Pavilion, Main Boulevard, Gulberg III, Lahore, Pakistan',
+    address: 'Dream Cars Showroom, Khanewal Road, Front of Stadium Gate, Vehari, Punjab, Pakistan',
     openingHours: 'Mon - Sat: 10:00 AM - 9:00 PM | Sun: Appointment Only',
     aboutText: '',
     facebook: 'https://facebook.com/dreamcars',
@@ -53,7 +48,7 @@ export default function AdminSettingsPage() {
             phone: data.phone || '03099491835',
             whatsapp: data.whatsapp || '923099491835',
             email: data.email || 'contact@dreamcars.com',
-            address: data.address || '',
+            address: data.address || 'Dream Cars Showroom, Vehari, Punjab, Pakistan',
             openingHours: data.openingHours || '',
             aboutText: data.aboutText || '',
             facebook: socials.facebook || '',
@@ -110,19 +105,19 @@ export default function AdminSettingsPage() {
   };
 
   if (loading) {
-    return <div className="text-center py-20 text-slate-400 text-xs">Loading showroom settings...</div>;
+    return <div className="text-center py-20 text-[#A6A39C] text-xs">Loading showroom settings...</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-white/10">
+      <div className="flex items-center justify-between pb-6 border-b border-[#30302D]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F2ED] tracking-tight">
             Showroom Information & Settings
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#A6A39C] mt-1">
             Configure contact coordinates, WhatsApp hotline, address, and showroom profile.
           </p>
         </div>
@@ -130,7 +125,7 @@ export default function AdminSettingsPage() {
         <button
           onClick={handleSubmit}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-950/60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C8A96B]/15"
         >
           <Save className="w-4 h-4" />
           <span>{saving ? 'Saving...' : 'Save Settings'}</span>
@@ -154,15 +149,15 @@ export default function AdminSettingsPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         
         {/* Brand & Logo */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-white/10 flex items-center gap-2">
-            <Globe className="w-5 h-5 text-rose-500" />
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider pb-3 border-b border-[#30302D] flex items-center gap-2">
+            <Globe className="w-5 h-5 text-[#C8A96B]" />
             Brand Identity
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Showroom Name
               </label>
               <input
@@ -170,25 +165,25 @@ export default function AdminSettingsPage() {
                 required
                 value={formData.showroomName}
                 onChange={(e) => setFormData({ ...formData, showroomName: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Logo Asset Path
               </label>
               <input
                 type="text"
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#161922] border border-white/5">
-            <div className="w-14 h-14 rounded-full overflow-hidden border border-white/20 p-0.5 bg-[#111319] shrink-0">
+          <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#151514] border border-[#30302D]">
+            <div className="w-14 h-14 rounded-full overflow-hidden border border-[#C8A96B]/30 p-0.5 bg-[#1D1C19] shrink-0">
               <Image
                 src={formData.logo}
                 alt="Logo Preview"
@@ -198,22 +193,22 @@ export default function AdminSettingsPage() {
               />
             </div>
             <div>
-              <span className="text-xs font-bold text-white block">Official Dream Cars Badge Active</span>
-              <span className="text-[11px] text-slate-400">Serving from {formData.logo}</span>
+              <span className="text-xs font-bold text-[#F4F2ED] block">Official Dream Cars Badge Active</span>
+              <span className="text-[11px] text-[#A6A39C]">Serving from {formData.logo}</span>
             </div>
           </div>
         </div>
 
         {/* Contact Coordinates & WhatsApp */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-white/10 flex items-center gap-2">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider pb-3 border-b border-[#30302D] flex items-center gap-2">
             <Phone className="w-5 h-5 text-emerald-400" />
             Hotline & Direct WhatsApp Integration
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Direct Phone Hotline *
               </label>
               <input
@@ -222,7 +217,7 @@ export default function AdminSettingsPage() {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="03099491835"
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500 font-mono"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B] font-mono"
               />
             </div>
 
@@ -236,15 +231,15 @@ export default function AdminSettingsPage() {
                 value={formData.whatsapp}
                 onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                 placeholder="923099491835"
-                className="w-full bg-[#161922] text-white border border-emerald-500/40 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-emerald-400 font-mono"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-emerald-500/40 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-emerald-400 font-mono"
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">
+              <span className="text-[10px] text-[#A6A39C] mt-1 block">
                 Format: 923099491835 (for wa.me links)
               </span>
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Concierge Email Address *
               </label>
               <input
@@ -252,59 +247,59 @@ export default function AdminSettingsPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Showroom Address
               </label>
               <input
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Showroom Opening Hours
               </label>
               <input
                 type="text"
                 value={formData.openingHours}
                 onChange={(e) => setFormData({ ...formData, openingHours: e.target.value })}
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
               About Showroom Text
             </label>
             <textarea
               rows={3}
               value={formData.aboutText}
               onChange={(e) => setFormData({ ...formData, aboutText: e.target.value })}
-              className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
             />
           </div>
         </div>
 
         {/* Social Links */}
-        <div className="bg-[#111319] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-          <h2 className="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-white/10">
+        <div className="bg-[#1D1C19] border border-[#30302D] rounded-3xl p-6 sm:p-8 space-y-6">
+          <h2 className="text-base font-bold text-[#F4F2ED] uppercase tracking-wider pb-3 border-b border-[#30302D]">
             Social Media Coordinates
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Instagram
               </label>
               <input
@@ -312,12 +307,12 @@ export default function AdminSettingsPage() {
                 value={formData.instagram}
                 onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                 placeholder="https://instagram.com/..."
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Facebook
               </label>
               <input
@@ -325,12 +320,12 @@ export default function AdminSettingsPage() {
                 value={formData.facebook}
                 onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
                 placeholder="https://facebook.com/..."
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 Twitter / X
               </label>
               <input
@@ -338,12 +333,12 @@ export default function AdminSettingsPage() {
                 value={formData.twitter}
                 onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
                 placeholder="https://twitter.com/..."
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-[11px] font-bold text-[#A6A39C] uppercase tracking-wider block mb-1">
                 YouTube
               </label>
               <input
@@ -351,7 +346,7 @@ export default function AdminSettingsPage() {
                 value={formData.youtube}
                 onChange={(e) => setFormData({ ...formData, youtube: e.target.value })}
                 placeholder="https://youtube.com/..."
-                className="w-full bg-[#161922] text-white border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#151514] text-[#F4F2ED] border border-[#30302D] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#C8A96B]"
               />
             </div>
           </div>
@@ -362,7 +357,7 @@ export default function AdminSettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-rose-950/60"
+            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#C8A96B] hover:bg-[#D8C08A] disabled:opacity-50 text-[#0B0B0A] font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#C8A96B]/15"
           >
             <Save className="w-4 h-4" />
             <span>{saving ? 'Saving...' : 'Save Showroom Settings'}</span>
