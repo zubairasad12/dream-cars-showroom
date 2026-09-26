@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import WhatsAppFloating from '@/components/WhatsAppFloating';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://dream-cars-vehari.netlify.app'),
   title: 'Dream Cars | Premium Cars for Sale in Vehari, Pakistan',
   description: 'Browse verified new, used, and Japanese imported cars for sale in Vehari, Punjab, Pakistan at Dream Cars. Certified 150-point inspection and transparent PKR pricing.',
   keywords: [

@@ -9,9 +9,11 @@ const path = require('path');
 const db = new DatabaseSync(path.join(__dirname, 'dev.db'), { readOnly: true });
 
 const DATE_COLUMNS = new Set(['createdAt', 'updatedAt', 'publishDate']);
+const BOOL_COLUMNS = new Set(['active', 'featured', 'isPrimary']);
 
 function q(v, col) {
   if (v === null || v === undefined) return 'NULL';
+  if (BOOL_COLUMNS.has(col)) return v ? 'true' : 'false';
   if (DATE_COLUMNS.has(col) && typeof v === 'number') {
     return `'${new Date(v).toISOString()}'`;
   }
