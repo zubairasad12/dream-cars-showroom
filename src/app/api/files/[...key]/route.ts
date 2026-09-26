@@ -26,11 +26,10 @@ export async function GET(
 
   try {
     const store = getStore('uploads');
-    const { data, metadata } = await store.getWithMetadata(key, {
-      type: 'arrayBuffer',
-    });
+    const result = await store.getWithMetadata(key, { type: 'arrayBuffer' });
 
-    if (!data) {
+    // Blobs returns null when the key does not exist
+    if (!result?.data) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
@@ -38,12 +37,12 @@ export async function GET(
     const headers = new Headers();
     headers.set(
       'Content-Type',
-      (metadata?.contentType as string) || CONTENT_TYPES[ext] || 'application/octet-stream'
+      (result.metadata?.contentType as string) || CONTENT_TYPES[ext] || 'application/octet-stream'
     );
     // Filenames are unique (timestamp + random hex), so cache aggressively.
     headers.set('Cache-Control', 'public, max-age=31536000, immutable');
 
-    return new Response(data, { headers });
+    return new Response(result.data, { headers });
   } catch (error) {
     console.error('File fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch file' }, { status: 500 });
