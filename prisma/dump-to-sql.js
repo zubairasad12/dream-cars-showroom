@@ -49,7 +49,9 @@ for (const table of tables) {
   console.log(`-- ${table} (${rows.length} rows)`);
   for (const row of rows) {
     const values = cols.map((c) => q(row[c], c)).join(', ');
-    console.log(`INSERT INTO "${table}" (${colList}) VALUES (${values});`);
+    console.log(
+      `INSERT INTO "${table}" (${colList}) VALUES (${values}) ON CONFLICT DO NOTHING;`
+    );
   }
   console.log('');
 }
