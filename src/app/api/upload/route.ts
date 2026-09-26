@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminFromRequest } from '@/lib/auth';
+import { getStore } from '@netlify/blobs';
 import path from 'path';
 import fs from 'fs/promises';
 import crypto from 'crypto';
@@ -7,6 +8,21 @@ import crypto from 'crypto';
 const IMAGE_EXTS = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
 const VIDEO_EXTS = ['.mp4', '.webm', '.mov', '.m4v', '.avi', '.mkv'];
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024; // 100 MB per video file
+
+const CONTENT_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+  '.gif': 'image/gif',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.mov': 'video/quicktime',
+  '.m4v': 'video/x-m4v',
+  '.avi': 'video/x-msvideo',
+  '.mkv': 'video/x-matroska',
+};
 
 // Cloudinary (optional) — when configured, uploads go to the cloud so they
 // persist on serverless hosts like Netlify where the filesystem is read-only.
@@ -49,12 +65,8 @@ export async function POST(req: NextRequest) {
 
     const uploadedUrls: string[] = [];
 
-    // Local disk target (development only)
+    // Local disk target (development only) — created lazily in the fallback branch
     let uploadDir: string | null = null;
-    if (!useCloudinary) {
-      uploadDir = path.join(process.cwd(), 'public', 'uploads');
-      await fs.mkdir(uploadDir, { recursive: true });
-    }
 
     for (const file of files) {
       if (!file || typeof file === 'string' || !file.name) continue;
@@ -79,18 +91,35 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      // Local filesystem fallback
+      // Netlify Blobs — persistent storage on serverless (Netlify prod + netlify dev)
       let safeExt: string;
       if (isVideo) {
         safeExt = VIDEO_EXTS.includes(ext) ? ext : '.mp4';
       } else {
         safeExt = IMAGE_EXTS.includes(ext) ? ext : '.jpg';
       }
-
       const uniqueName = `dreamcars-${Date.now()}-${crypto.randomBytes(6).toString('hex')}${safeExt}`;
-      const filePath = path.join(uploadDir as string, uniqueName);
+      const contentType =
+        file.type || CONTENT_TYPES[safeExt] || 'application/octet-stream';
 
-      await fs.writeFile(filePath, buffer);
+      try {
+        const store = getStore('uploads');
+        await store.set(uniqueName, new Blob([new Uint8Array(buffer)]), {
+          metadata: { contentType },
+        });
+        uploadedUrls.push(`/api/files/${uniqueName}`);
+        continue;
+      } catch (blobError) {
+        // Plain `next dev` has no Blobs context — fall back to local disk.
+        if (process.env.NETLIFY) throw blobError;
+      }
+
+      // Local filesystem fallback (development only)
+      if (!uploadDir) {
+        uploadDir = path.join(process.cwd(), 'public', 'uploads');
+        await fs.mkdir(uploadDir, { recursive: true });
+      }
+      await fs.writeFile(path.join(uploadDir, uniqueName), buffer);
       uploadedUrls.push(`/uploads/${uniqueName}`);
     }
 
