@@ -1,9 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
-// Netlify DB injects NETLIFY_DB_URL (hosted Postgres) into deployed functions.
-// Point Prisma at it so the runtime never falls back to the local .env value.
-if (process.env.NETLIFY_DB_URL) {
-  process.env.DATABASE_URL = process.env.NETLIFY_DB_URL;
+// Netlify DB injects NETLIFY_DB_URL (hosted Postgres) into deployed functions
+// via the global Netlify.env object — NOT process.env. Resolve it from either
+// source and point Prisma's DATABASE_URL at it so the runtime never falls
+// back to the local .env placeholder.
+const g = globalThis as unknown as {
+  Netlify?: { env?: { get?: (key: string) => string | undefined } };
+};
+
+const netlifyDbUrl =
+  g.Netlify?.env?.get?.('NETLIFY_DB_URL') || process.env.NETLIFY_DB_URL;
+
+if (netlifyDbUrl) {
+  process.env.DATABASE_URL = netlifyDbUrl;
 }
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
