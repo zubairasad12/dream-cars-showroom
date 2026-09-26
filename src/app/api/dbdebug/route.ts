@@ -1,27 +1,33 @@
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-// Temporary diagnostics route — reports which DB-related env keys exist at
-// runtime. Returns key NAMES and protocols only, never secret values.
+// Temporary diagnostics route — runs a real Prisma query and returns the
+// exact error so we can see whether it's connection, auth, or missing tables.
 export async function GET() {
-  const g = globalThis as unknown as {
-    Netlify?: { env?: { toObject?: () => Record<string, string>; get?: (k: string) => string | undefined } };
-    Deno?: { env?: object };
+  const result: Record<string, unknown> = {
+    databaseUrlProtocol: process.env.DATABASE_URL?.split(':')[0],
+    netlifyDbUrlProtocol: process.env.NETLIFY_DB_URL?.split(':')[0],
   };
 
-  const netlifyEnvObject = g.Netlify?.env?.toObject?.() || null;
-  const netlifyKeys = netlifyEnvObject ? Object.keys(netlifyEnvObject).filter((k) => /DB|DATABASE|NETLIFY|URL/i.test(k)) : null;
+  try {
+    await prisma.$connect();
+    result.connect = 'OK';
 
-  const processKeys = Object.keys(process.env).filter((k) => /DB|DATABASE|NETLIFY|URL/i.test(k));
+    const tables = await prisma.$queryRawUnsafe(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY table_name"
+    );
+    result.tables = tables;
 
-  const proto = (s?: string) => (s ? s.split(':')[0] + '://' + (s.includes('@') ? '***@' + s.split('@')[1].split('/')[0] : 'host') : null);
+    const carCount = await prisma.car.count();
+    result.carCount = carCount;
 
-  return NextResponse.json({
-    hasNetlifyGlobal: Boolean(g.Netlify),
-    hasNetlifyEnv: Boolean(g.Netlify?.env),
-    netlifyKeys,
-    netlifyDbUrlProtocol: proto(g.Netlify?.env?.get?.('NETLIFY_DB_URL')),
-    processKeys,
-    processNetlifyDbUrlProtocol: proto(process.env.NETLIFY_DB_URL),
-    processDatabaseUrlProtocol: proto(process.env.DATABASE_URL),
-  });
+    const postCount = await prisma.blogPost.count();
+    result.blogPostCount = postCount;
+  } catch (err: any) {
+    result.connect = 'FAILED';
+    result.errorCode = err?.code || null;
+    result.errorMessage = String(err?.message || err).slice(0, 500);
+  }
+
+  return NextResponse.json(result);
 }
